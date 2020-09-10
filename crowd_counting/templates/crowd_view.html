@@ -1,28 +1,44 @@
 {% extends 'base.html' %}
+    {% load static %}
 
 {% block title %}Crowd Status{% endblock %}
 {% block content %}
-    On this web page, we count how crowded the drakenkelder is.<hr>
+    On this web page, we count how crowded the drakenkelderis.
+    <hr>
     <h4> Crowd Status</h4>
-    {% if  full %}
-        The room is full :(
-    {% else %}
-        {{ crowd }}/{{ max }}
-    {% endif %};
+    <h4>Room Status</h4>
+    <div style="width:400px; background-color:lightgrey;  ">
+        <div style-="margin: auto;">
 
-    {% if open %}
-        The room is open!
-    {% endif %}
+            {% if open %}
+                The Drakenkelder is open!<br/>
+                {% if full %}
+                    <img style="width:100px;" src="{% static 'images/light/yellow.png' %}"><br/>
+                    The room is full :(
+                {% else %}
+                    <img style="width:100px;" src="{% static 'images/light/green.png' %}"><br/>
+                    The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
+                {% endif %}
+            {% else %}
+                <img style="width:100px;" src="{% static 'images/light/red.png' %}"><br/>
+                The Drakenkelder is closed!
+            {% endif %}
+        </div>
+    </div>
+
+
+
     {% if not user.is_anonymous %}
         <hr>
         <h4>Change Status</h4>
         Since you're logged in, you can control the crowd status.
         <form method="post" action="#">
-        {% csrf_token %}
-            <input type="number" id="crowd" name="crowd">
+            {% csrf_token %}
+            <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
             <input type="submit" value="set">
         </form>
-    {% endif %}<hr>
+    {% endif %}
+    <hr>
     The Drakenkelder is the association room of two associations at the University of Twente:
     <h5>Fanaat</h5>
     <a href="https://fanaat.utwente.nl">Fanaat</a> is the board games association at the University of Twente.
