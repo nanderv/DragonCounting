@@ -1,6 +1,6 @@
 import datetime
 
-from django.db import models
+from django.db import models, transaction
 
 
 # Create your models here.
@@ -11,6 +11,7 @@ class CrowdStatus(models.Model):
     crowd = models.IntegerField()
 
     @staticmethod
+    @transaction.atomic
     def set_status(crowd: int):
         statuses = CrowdStatus.objects.filter(to_datetime=None)
         print("Z")

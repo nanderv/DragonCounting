@@ -1,6 +1,7 @@
 import datetime
 
-from django.db import models
+from django.db import models, transaction
+
 
 # Create your models here.
 class TrafficLightStatus(models.Model):
@@ -9,6 +10,7 @@ class TrafficLightStatus(models.Model):
     open = models.BooleanField()
 
     @staticmethod
+    @transaction.atomic
     def set_status(open:bool):
         statuses = TrafficLightStatus.objects.filter(to_datetime=None)
         status = None
