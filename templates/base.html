@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
-{% load menu %}
+{#{% load menu %}#}
 <head>
 
     <link rel="apple-touch-icon" sizes="57x57" href="{% static 'icons/apple-icon-57x57.png' %}">
@@ -35,7 +35,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Bellettrie Library Administration System [DEMO]</title>
+    <title>Dragon Counter</title>
     <script defer src="{% static 'fa/solid.js' %}"></script>
 
     <!-- Bootstrap CSS CDN -->
@@ -87,19 +87,20 @@
         }
     </style>
     <div id="header" class="{% if user.is_anonymous %}isAnonymous{% endif %}">
-        <a href="{% url 'homepage' %}" class="logo-part" style=" text-align: center;width:100%; "><img
+        <a class="logo-part" style=" text-align: center;width:100%; "><img
                 src="{% static 'images/wurm.png' %}"
-                style="height:75px;     font-family: 'Pangolin'; "/> Bellettrie
+                style="height:75px;     font-family: 'Pangolin'; "/> Dragon Counter<img
+                src="{% static 'images/flying_wurm.png' %}"
+                style="height:75px;     font-family: 'Pangolin'; "/>
         </a>
         <hr>
-        <div class="top-nav-left  ">
-            {% render_menu 'desktop-top' 'top-left'%}
 
-
-
-        </div>
         <div class="top-nav hiddenMobile">
-            {% render_menu 'desktop-top' 'top-right'%}
+            {% if user.is_anonymous %}
+                <a href="/accounts/login/" class="vertical hiddenMobile">Login</a>
+            {% else %}
+                <a href="/accounts/logout/" class="vertical hiddenMobile">Logout</a>
+            {% endif %}
             <a class="vertical"> </a>
         </div>
     </div>

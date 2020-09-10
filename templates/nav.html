@@ -1,13 +1,13 @@
-{% load menu %}
+{#{% load menu %}#}
 <ul class="sidebar-menu" style="max-width:100%">
-    {% render_menu 'sidebar-item' 'sidebar' %}
+{#    {% render_menu 'sidebar-item' 'sidebar' %}#}
 
     {% if user.is_authenticated %}
         <li class="hiddenDesktop"><i>Normal menu below</i></li>
     {% endif %}
 
-    {% render_menu 'mobile-only' 'top-left' %}
-    {% render_menu 'mobile-only' 'top-right' %}
+{#    {% render_menu 'mobile-only' 'top-left' %}#}
+{#    {% render_menu 'mobile-only' 'top-right' %}#}
 
 
 </ul>

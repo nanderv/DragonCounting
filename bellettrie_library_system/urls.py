@@ -15,8 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
+
+
+def redirect_view(request):
+    response = redirect('/crowds/status')
+    return response
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('traffic_light/', include('traffic_light.urls')),
+    path('crowds/', include('crowd_counting.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', redirect_view, name='homepage.old_link'),
+
 ]

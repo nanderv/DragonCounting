@@ -29,7 +29,7 @@ DEBUG = False
 ALLOWED_HOSTS = ["localhost", "nander.net", "127.0.0.1"]
 
 # Application definition
-
+MAX_CROWD = 15
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

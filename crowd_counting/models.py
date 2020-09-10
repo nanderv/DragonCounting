@@ -13,12 +13,12 @@ class CrowdStatus(models.Model):
     @staticmethod
     def set_status(crowd: int):
         statuses = CrowdStatus.objects.filter(to_datetime=None)
-
+        print("Z")
         if len(statuses) == 0:
             CrowdStatus.objects.create(from_datetime=datetime.datetime.now(), crowd=crowd)
         else:
             status = statuses[0]
-            if status.open != crowd:
+            if status.crowd != crowd:
                 status.to_datetime = datetime.datetime.now()
                 status.save()
                 CrowdStatus.objects.create(from_datetime=datetime.datetime.now(), crowd=crowd)
