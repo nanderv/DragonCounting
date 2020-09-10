@@ -8,6 +8,15 @@
 
 {#    {% render_menu 'mobile-only' 'top-left' %}#}
 {#    {% render_menu 'mobile-only' 'top-right' %}#}
+  {% if user.is_anonymous %}
+    <li class="treeview hiddenDesktop"><a href="/accounts/login/">
+        <i class="fa fa-plane"></i><span>Login</span>
+    </a></li>
+{% else %}
+        <li class="treeview hiddenDesktop"><a href="/accounts/logout/">
+        <i class="fa fa-plane"></i><span>Logout</span>
+    </a></li>
 
+{% endif %}
 
 </ul>
