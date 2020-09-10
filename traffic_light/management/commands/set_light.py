@@ -33,12 +33,15 @@ class Command(BaseCommand):
         import urllib.request
         import urllib.error
         try:
-            f = urllib.request.urlopen(URL)
-            if f.status == 200 or f.status == 302:
-                open = True
-            else:
-                print("DK Closed")
-        except urllib.error.HTTPError:
+            try:
+                f = urllib.request.urlopen(URL,timeout=5)
+                if f.status == 200 or f.status == 302:
+                    open = True
+                else:
+                    print("DK Closed")
+            except urllib.error.HTTPError:
+                pass
+        except urllib.error.URLError:
             pass
         TrafficLightStatus.set_status(open)
         if open:
