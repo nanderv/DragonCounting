@@ -1,8 +1,0 @@
-{% extends 'base.html' %}
-{% block title %}Lendings{% endblock %}
-{% block content %}
-    {% load books %}
-    {% get_user_books member perms %}
-    Older lendings:
-    {% get_user_books member perms True %}
-{% endblock %}

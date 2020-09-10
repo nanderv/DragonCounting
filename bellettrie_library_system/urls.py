@@ -16,21 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from bellettrie_library_system.views import index
-from public_pages.views import view_page
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('members/', include('members.urls')),
-    path('works/', include('works.urls')),
-    path('lend/', include('lendings.urls')),
-    path('config/', include('config.urls')),
-    path('inventarisation/', include('inventarisation.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('creators/', include('creators.urls')),
-    path('series/', include('series.urls')),
-    path('pages/', include('public_pages.urls')),
-    path('datamining/', include('datamining.urls')),
-    path('', view_page('basic', 'home'), name='homepage'),
-    path('konnichiwa', view_page('konnichiwa', 'home'), name='konnichiwa.home'),
+    path('traffic_light/', include('traffic_light.urls')),
 ]
