@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from crowd_counting.models import CrowdStatus
@@ -12,6 +12,7 @@ def view(request):
     if request.POST and not request.user.is_anonymous:
         crowd = request.POST.get('crowd')
         CrowdStatus.set_status(crowd)
+        return redirect('/')
     crowd_status = CrowdStatus.objects.filter(to_datetime=None)
     crowd = 0
     if len(crowd_status) == 1:

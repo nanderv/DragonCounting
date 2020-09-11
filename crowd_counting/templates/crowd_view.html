@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-    {% load static %}
+{% load static %}
 
 {% block title %}Crowd Status{% endblock %}
 {% block content %}
@@ -19,8 +19,8 @@
                     The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
                 {% endif %}
             {% else %}
-                <img style="width:100px;" src="{% static 'images/light/red.png' %}"><br/>
-                The Drakenkelder is closed!
+                The Drakenkelder is closed!<br/>
+                <img style="width:100px;" src="{% static 'images/light/red.png' %}">
             {% endif %}
         </div>
     </div>
@@ -30,7 +30,9 @@
     {% if not user.is_anonymous %}
         <hr>
         <h4>Change Status</h4>
-        Since you're logged in, you can control the crowd status.
+        Since you're logged in, you can control the crowd status.<br />
+        {{ crowd }}/{{ max }}
+
         <form method="post" action="#">
             {% csrf_token %}
             <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
