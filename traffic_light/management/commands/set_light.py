@@ -34,7 +34,7 @@ class Command(BaseCommand):
         import urllib.error
         try:
             try:
-                f = urllib.request.urlopen(URL,timeout=5)
+                f = urllib.request.urlopen(URL, timeout=5)
                 if f.status == 200 or f.status == 302:
                     open = True
                 else:

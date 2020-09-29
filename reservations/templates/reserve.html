@@ -8,9 +8,19 @@
     During opening hours we work with reservations. You have to reserve if you're planning to visit for a 'customer-task', not
     if you are a committee-member that wants to work on things.</br />
 
-    In the afternoon, {{ available_afternoon }} places are taken.<br/>
-    In the evening, {{ available_evening }} places are taken.<br/>
-    The total capacity of the room is {{ maximum }}.<br/>
+    <table>
+    <tr><th>Timeslot Name</th><th>In Use</th><th>Capacity</th></tr>
+        {% for timeslot in timeslots %}
+            {% if timeslot.is_on_today %}
+                {% if timeslot.get_len_res == timeslot.capacity %}
+                    <tr><td>{{ timeslot.name }}</td><td colspan="2">FULL</td></tr>
+                    {% else %}
+        <tr><td>{{ timeslot.name }}</td><td>{{ timeslot.get_len_res }}</td><td>{{ timeslot.capacity }}</td></tr>
+                    {% endif %}
+    {% endif %}
+    {% endfor %}
+    </table>
+
     {% if instance %}
         <h3>Reservation succesful!</h3>
         <a href="/reserve">Reserve another</a>
@@ -28,29 +38,21 @@
 
     {% if perms.reservations.change_reservation %}
         <h3>Reservations</h3>
-        <h4>Afternoon</h4>
-        <table >
-            <tr>
-                <th>Name</th>
-            </tr>
-            {% for reservation in afternoon_res %}
-                <tr>
-                    <td>{{ reservation.name }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        <h4>Evening</h4>
-<table >
-            <tr>
-                <th>Name</th>
-            </tr>
-            {% for reservation in evening_res %}
-                <tr>
-                    <td>{{ reservation.name }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        <h4>Events</h4>
+        {% for timeslot in timeslots %}
+            {% if timeslot.is_on_today %}
+                <h4>{{ timeslot.name }}</h4>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                    {% for reservation in timeslot.get_reservations %}
+                        <tr>
+                            <td>{{ reservation.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endfor %}
 
     {% endif %}
     <h3>Privacy:</h3>
