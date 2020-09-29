@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reserve for Bellettrie{% endblock %}
+{% block content %}
+    Due to government regulations, we have to work with reservations. Outside opening hours, the reservations are handled 'ad-hoc', which means that the opener 'reserves' a spot for you.<br />
+    During opening hours we work with reservations. You have to reserve if you're planning to visit for a 'customer-task', not if you are a committee-member that wants to work on things.</br />
+
+    In the afternoon, {{ available_afternoon }} places are taken.<br/>
+    In the evening, {{ available_evening }} places are taken.<br/>
+    The total capacity of the room is {{ maximum }}.<br/>
+    {% if instance %}
+        <h3>Reservation succesful!</h3>
+        <a href="/reserve">Reserve another</a>
+    {% else %}
+        <h3>Reserve a timeslot at bellettrie here</h3>
+        <form method="post" action='#'>
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+
+        </table>
+        <input type="submit" value="Reserve"></button>
+    </form>
+    {% endif %}
+
+{% endblock %}

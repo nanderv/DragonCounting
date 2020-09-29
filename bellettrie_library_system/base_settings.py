@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.urls import reverse
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -30,6 +29,7 @@ ALLOWED_HOSTS = ["localhost", "nander.net", "127.0.0.1"]
 
 # Application definition
 MAX_CROWD = 15
+MAX_RESERVE = 10
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'mail_templated',
     'django_tables2',
     'traffic_light',
-    'crowd_counting'
+    'crowd_counting',
+    'reservations'
 ]
 
 MIDDLEWARE = [
@@ -114,4 +115,3 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap.html"
 
 LOGOUT_REDIRECT_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/'
-
