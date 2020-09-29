@@ -26,6 +26,7 @@
         <a href="/reserve">Reserve another</a>
     {% else %}
         <h3>Reserve a timeslot at bellettrie here</h3>
+        You always reserve a timeslote for <i>today</i>. This means that if you reserve at 13:45, this has no meaning, because you're reserving for a timeslot in the past.
         <form method="post" action='#'>
             {% csrf_token %}
             <table>
