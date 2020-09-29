@@ -38,13 +38,10 @@ class Command(BaseCommand):
                 if f.status == 200 or f.status == 302:
                     open = True
                 else:
-                    print("DK Closed")
+                    pass
             except urllib.error.HTTPError:
                 pass
         except urllib.error.URLError:
             pass
         TrafficLightStatus.set_status(open)
-        if open:
-            print("OPEN")
-        else:
-            print("CLOSED")
+
