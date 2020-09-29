@@ -6,6 +6,30 @@
     On this web page, we count how crowded the drakenkelder is.
     <hr>
     <div class="row">
+        {% if not user.is_anonymous %}
+
+
+            <div class="card col-sm-12  col-md-12">
+                <div class="card-body">
+                    <h5 class="card-title">Change Status</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">How Busy is the DK?</h6>
+                    <p class="card-text">
+                        The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
+
+                    <form method="post" action="#">
+                        {% csrf_token %}
+                        <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
+                        <input type="submit" value="set">
+                    </form>
+                    </p>
+                    <a class="btn btn-primary" href="{% url 'traffic_light.diff' -1 %}#here" class="card-link">-1</a>
+                    <a class="btn btn-primary" href="{% url 'traffic_light.diff' 1 %}#here" class="card-link">+1</a>
+
+                </div>
+            </div>
+
+
+        {% endif %}
 
 
         <div class="card col-sm-12  col-md-6">
@@ -57,35 +81,7 @@
                 </div>
             </div>
         </div>
-
-        {% if not user.is_anonymous %}
-            <hr>
-            <a name="here" ></a>
-
-            <div class="card col-sm-12  col-md-12">
-                <div class="card-body">
-                    <h5 class="card-title">Change Status</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">How Busy is the DK?</h6>
-                    <p class="card-text">
-                        The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
-
-                    <form method="post" action="#">
-                        {% csrf_token %}
-                        <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
-                        <input type="submit" value="set">
-                    </form>
-                    </p>
-                    <a class="btn btn-primary" href="{% url 'traffic_light.diff' -1 %}#here" class="card-link">-1</a>
-                    <a class="btn btn-primary" href="{% url 'traffic_light.diff' 1 %}#here" class="card-link">+1</a>
-
-                </div>
-            </div>
-
-
-        {% endif %}
     </div>
-
-    <hr>
 
     <h2>The Drakenkelder is the association room of two associations at the University of Twente:</h2>
     <div class="row">
@@ -94,7 +90,8 @@
                 <h5 class="card-title">Fanaat</h5>
                 <p class="card-text">
 
-                    <a href="https://fanaat.utwente.nl">Fanaat</a> is the board games association at the University of Twente.
+                    <a href="https://fanaat.utwente.nl">Fanaat</a> is the board games association at the University of
+                    Twente.
                 </p>
             </div>
         </div>
