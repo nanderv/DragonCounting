@@ -5,17 +5,17 @@
 {% block content %}
     This page will be used for registring who has been at Bellettrie on a day. This is done to combat the corona virus.
     {% if instance %}
-        <h3>Reservation succesful!</h3>
+        <h3>Registration succesful!</h3>
         <a href="{% url 'register' %}">Register another</a>
     {% else %}
-        <h3>Reserve a timeslot at bellettrie here</h3>
+        <h3>Register your visit here</h3>
         <form method="post" action='#'>
             {% csrf_token %}
             <table>
                 {{ form.as_table }}
 
             </table>
-            <input type="submit" value="Register"></button>
+            <input type="submit" value="Register">
         </form>
     {% endif %}
 
