@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django_tables2',
     'traffic_light',
     'crowd_counting',
-    'reservations'
+    'reservations',
+    'templogin'
 ]
 
 MIDDLEWARE = [

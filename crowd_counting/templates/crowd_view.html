@@ -3,8 +3,12 @@
 
 {% block title %}Crowd Status{% endblock %}
 {% block content %}
-    On this web page, we count how crowded the drakenkelderis.
+    On this web page, we count how crowded the drakenkelder is.
     <hr>
+    <h4>Reservation Portal</h4>
+    To use the Drakenkelder during Bellettrie opening hours, you have to reserve. This can be done <a href="{% url 'reserve' %}">here</a>.
+    <h4>Register your visit</h4>
+    We log who entered our room digitally. This can be done   <a href="{% url 'register' %}">here</a>.
     <h4>Room Status</h4>
     <div style="width:400px; background-color:lightgrey;  ">
         <div style-="margin: auto;">
@@ -25,8 +29,6 @@
         </div>
     </div>
 
-
-
     {% if not user.is_anonymous %}
         <hr>
         <h4>Change Status</h4>
@@ -40,6 +42,7 @@
         </form>
     {% endif %}
     <hr>
+
     The Drakenkelder is the association room of two associations at the University of Twente:
     <h5>Fanaat</h5>
     <a href="https://fanaat.utwente.nl">Fanaat</a> is the board games association at the University of Twente.

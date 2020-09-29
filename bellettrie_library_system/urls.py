@@ -28,7 +28,8 @@ urlpatterns = [
     path('traffic_light/', include('traffic_light.urls')),
     path('crowds/', include('crowd_counting.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-path('reserve/', include('reservations.urls')),
+    path('reserve/', include('reservations.urls')),
     path('', redirect_view, name='homepage.old_link'),
+    path('templogin/', include('templogin.urls')),
 
 ]

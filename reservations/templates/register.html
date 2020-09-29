@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register for Bellettrie{% endblock %}
+{% block content %}
+    This page will be used for registring who has been at Bellettrie on a day. This is done to combat the corona virus.
+    {% if instance %}
+        <h3>Reservation succesful!</h3>
+        <a href="{% url 'register' %}">Register another</a>
+    {% else %}
+        <h3>Reserve a timeslot at bellettrie here</h3>
+        <form method="post" action='#'>
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+
+            </table>
+            <input type="submit" value="Register"></button>
+        </form>
+    {% endif %}
+
+    <h3>Privacy:</h3>
+    The data submitted here will be stored for four weeks, for contact tracing in case of a corona case within the association.
+    This data will only be read in this case.
+{% endblock %}
