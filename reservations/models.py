@@ -22,9 +22,10 @@ class TimeslotManager(models.Manager):
         result_list = []
         timeslots = self.model.objects.all()
         for timeslot in timeslots:
-             if timeslot.is_on_today() and timeslot.get_len_res() < timeslot.capacity:
-                 result_list.append(timeslot.pk)
+            if timeslot.is_on_today() and timeslot.get_len_res() < timeslot.capacity:
+                result_list.append(timeslot.pk)
         return self.model.objects.filter(pk__in=result_list)
+
 
 class Timeslot(models.Model):
     name = models.CharField(max_length=32)
@@ -46,7 +47,7 @@ class Timeslot(models.Model):
 
 
 class Reservation(models.Model):
-    timeslot = models.ForeignKey(Timeslot,on_delete=CASCADE)
+    timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
     name = models.CharField(max_length=16)
     date = models.DateField()
 
@@ -56,7 +57,7 @@ class Reservation(models.Model):
         lst.delete()
 
     def __str__(self):
-        return str(self.date)+"::"+ str(self.timeslot) + " : " + self.name
+        return str(self.date) + "::" + str(self.timeslot) + " : " + self.name
 
 
 class Register(models.Model):
@@ -69,3 +70,6 @@ class Register(models.Model):
     def wipe():
         lst = Register.objects.filter(date__lt=date.today() - timedelta(days=28))
         lst.delete()
+
+    def __str__(self):
+        return str(self.date) + "::" + " : " + self.name
