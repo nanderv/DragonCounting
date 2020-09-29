@@ -12,7 +12,7 @@ def view(request):
     if request.POST and not request.user.is_anonymous:
         crowd = request.POST.get('crowd')
         CrowdStatus.set_status(crowd)
-        return redirect('/')
+        return redirect('traffic_light.view')
     crowd_status = CrowdStatus.objects.filter(to_datetime=None)
     crowd = 0
     if len(crowd_status) == 1:
@@ -35,3 +35,14 @@ def crowd_api(request):
     if len(light) == 1:
         open = light[0].open
     return HttpResponse(str(crowd)+","+str(settings.MAX_CROWD)+","+ str(open))
+
+
+def diff(request, delta):
+    crowd_status = CrowdStatus.objects.filter(to_datetime=None)
+    crowd = 0
+    if len(crowd_status) == 1:
+        crowd = crowd_status[0].crowd
+    crowd += int(delta)
+    CrowdStatus.set_status(crowd)
+
+    return redirect('traffic_light.view')

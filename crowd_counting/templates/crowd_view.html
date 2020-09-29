@@ -5,47 +5,107 @@
 {% block content %}
     On this web page, we count how crowded the drakenkelder is.
     <hr>
-    <h4>Reservation Portal</h4>
-    To use the Drakenkelder during Bellettrie opening hours, you have to reserve. This can be done <a href="{% url 'reserve' %}">here</a>.
-    <h4>Register your visit</h4>
-    We log who entered our room digitally. This can be done   <a href="{% url 'register' %}">here</a>.
-    <h4>Room Status</h4>
-    <div style="width:400px; background-color:lightgrey;  ">
-        <div style-="margin: auto;">
+    <div class="row">
 
-            {% if open %}
-                The Drakenkelder is open!<br/>
-                {% if full %}
-                    <img style="width:100px;" src="{% static 'images/light/yellow.png' %}"><br/>
-                    The room is full :(
-                {% else %}
-                    <img style="width:100px;" src="{% static 'images/light/green.png' %}"><br/>
-                    The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
-                {% endif %}
-            {% else %}
-                The Drakenkelder is closed!<br/>
-                <img style="width:100px;" src="{% static 'images/light/red.png' %}">
-            {% endif %}
+
+        <div class="card col-sm-12  col-md-6">
+            <div class="card-body">
+                <h5 class="card-title">Reservations</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Reserve for your visit</h6>
+                <p class="card-text">If you want to visit us during Bellettrie opening hours, you have to reserve
+                    beforehand.</p>
+                <a href="{% url 'reserve' %}" class="card-link">Reserve here</a>
+            </div>
         </div>
+
+        <div class="card col-sm-12  col-md-6">
+            <div class="card-body">
+                <h5 class="card-title">Registering your visit</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Say that you were there</h6>
+                <p class="card-text">After entering the Drakenkelder, you should register the fact that you visited. If
+                    corona-cases are detected around your visit of the DK, you will be notified.</p>
+                <a href="{% url 'register' %}" class="card-link">Register</a>
+
+            </div>
+        </div>
+
+        <div class="card col-sm-12 col-md-12">
+            <div class="card-body">
+                <h5 class="card-title">Room Status</h5>
+
+
+                <div style-="margin: auto;">
+
+                    {% if open %}
+                        <h6 class="card-subtitle mb-2 text-muted">The drakenkelder is open</h6>
+
+                        {% if full %}
+                            <img style="width:100px;" src="{% static 'images/light/yellow.png' %}"><br/>
+                            The room is full :(
+                        {% else %}
+                            <img style="width:100px;" src="{% static 'images/light/green.png' %}"><br/>
+                            The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
+                        {% endif %}
+                        </p>
+
+                    {% else %}
+                        <h6 class="card-subtitle mb-2 text-muted">The drakenkelder is closed</h6>
+                        <p class="card-text">
+                            <img style="width:100px;" src="{% static 'images/light/red.png' %}">
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if not user.is_anonymous %}
+            <hr>
+
+            <div class="card col-sm-12  col-md-12">
+                <div class="card-body">
+                    <h5 class="card-title">Change Status</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">How Busy is the DK?</h6>
+                    <p class="card-text">
+                        The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
+
+                    <form method="post" action="#">
+                        {% csrf_token %}
+                        <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
+                        <input type="submit" value="set">
+                    </form>
+                    </p>
+                    <a class="btn btn-primary" href="{% url 'traffic_light.diff' -1 %}" class="card-link">-1</a>
+                    <a class="btn btn-primary" href="{% url 'traffic_light.diff' 1 %}" class="card-link">+1</a>
+
+                </div>
+            </div>
+
+
+        {% endif %}
     </div>
 
-    {% if not user.is_anonymous %}
-        <hr>
-        <h4>Change Status</h4>
-        Since you're logged in, you can control the crowd status.<br />
-        {{ crowd }}/{{ max }}
-
-        <form method="post" action="#">
-            {% csrf_token %}
-            <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
-            <input type="submit" value="set">
-        </form>
-    {% endif %}
     <hr>
 
-    The Drakenkelder is the association room of two associations at the University of Twente:
-    <h5>Fanaat</h5>
-    <a href="https://fanaat.utwente.nl">Fanaat</a> is the board games association at the University of Twente.
-    <h5>Bellettrie</h5>
-    <a href="https://bellettrie.utwente.nl">Bellettrie</a> is the library association at the University of Twente.
+    <h2>The Drakenkelder is the association room of two associations at the University of Twente:</h2>
+    <div class="row">
+        <div class="card col-sm-12  col-md-6">
+            <div class="card-body">
+                <h5 class="card-title">Fanaat</h5>
+                <p class="card-text">
+
+                    <a href="https://fanaat.utwente.nl">Fanaat</a> is the board games association at the University of Twente.
+                </p>
+            </div>
+        </div>
+        <div class="card col-sm-12  col-md-6">
+            <div class="card-body">
+                <h5 class="card-title">Bellettrie</h5>
+                <p class="card-text">
+
+                    <a href="https://bellettrie.utwente.nl">Bellettrie</a> is the library association at the University of
+                    Twente.
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -7,35 +7,63 @@
     'ad-hoc', which means that the opener 'reserves' a spot for you.<br/>
     During opening hours we work with reservations. You have to reserve if you're planning to visit for a 'customer-task', not
     if you are a committee-member that wants to work on things.</br />
-
-    <table>
-    <tr><th>Timeslot Name</th><th>In Use</th><th>Capacity</th></tr>
-        {% for timeslot in timeslots %}
-            {% if timeslot.is_on_today %}
-                {% if timeslot.get_len_res == timeslot.capacity %}
-                    <tr><td>{{ timeslot.name }}</td><td colspan="2">FULL</td></tr>
-                    {% else %}
-        <tr><td>{{ timeslot.name }}</td><td>{{ timeslot.get_len_res }}</td><td>{{ timeslot.capacity }}</td></tr>
-                    {% endif %}
-    {% endif %}
-    {% endfor %}
-    </table>
-
-    {% if instance %}
-        <h3>Reservation succesful!</h3>
-        <a href="/reserve">Reserve another</a>
-    {% else %}
-        <h3>Reserve a timeslot at bellettrie here</h3>
-        You always reserve a timeslote for <i>today</i>. This means that if you reserve at 13:45, this has no meaning, because you're reserving for a timeslot in the past.
-        <form method="post" action='#'>
-            {% csrf_token %}
+    <div class="row">
+    <div class="card col-md-12  col-lg-6">
+        <div class="card-body">
+            <h5 class="card-title">How busy are Today's timeslots?</h5>
+            <p class="card-text">
             <table>
-                {{ form.as_table }}
-
+                <tr>
+                    <th>Timeslot Name</th>
+                    <th>In Use</th>
+                    <th>Capacity</th>
+                </tr>
+                {% for timeslot in timeslots %}
+                    {% if timeslot.is_on_today %}
+                        {% if timeslot.get_len_res == timeslot.capacity %}
+                            <tr>
+                                <td>{{ timeslot.name }}</td>
+                                <td colspan="2">FULL</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ timeslot.name }}</td>
+                                <td>{{ timeslot.get_len_res }}</td>
+                                <td>{{ timeslot.capacity }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             </table>
-            <input type="submit" value="Reserve"></button>
-        </form>
-    {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="card col-md-12  col-lg-6">
+        <div class="card-body">
+            <h5 class="card-title">Reservations</h5>
+            {% if instance %}
+                <h6 class="card-subtitle mb-2 text-muted">Reservation succesful!</h6>
+                <a href="{% url 'reserve' %}" class="card-link">Reserve another</a>
+
+            {% else %}
+                <h6 class="card-subtitle mb-2 text-muted">Fill in the form</h6>
+                <p class="card-text">Fill in your name and when you want to visit.
+                <form method="post" action='#'>
+                    {% csrf_token %}
+                    <table>
+                        {{ form.as_table }}
+
+                    </table>
+                    <input type="submit" value="Register">
+                </form>
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
 
     {% if perms.reservations.change_reservation %}
         <h3>Reservations</h3>
