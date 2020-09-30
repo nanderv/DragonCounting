@@ -47,11 +47,9 @@
     <script src="{% static "jquery.js" %} "></script>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
-    {#    <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=Rubik:wght@500&display=swap" rel="stylesheet">#}
 <body>
 
-<div id="wrapper" class="{% if user.is_anonymous %}isAnonymous{% endif %}">
+<div id="wrapper" {% if user.is_anonymous %}class="isAnonymous"{% endif %}>
     <style>
         .top-nav {
             padding-top: 20px;
@@ -86,7 +84,16 @@
             src: url("{% static 'Present_Roman.ttf' %}");
         }
     </style>
+
+
     <div id="header" class="{% if user.is_anonymous %}isAnonymous{% endif %}">
+        <div class="top-nav-left hiddenMobile">
+                        <a href="{% url 'traffic_light.view' %}" class="vertical hiddenMobile">Crowd Status</a>
+
+            <a href="{% url 'reserve' %}" class="vertical hiddenMobile">Reserve</a>
+            <a class="vertical"> </a>
+
+        </div>
         <a href="/" class="logo-part" style=" text-align: center;width:100%; "><img
                 src="{% static 'images/wurm.png' %}"
                 style="height:75px;     font-family: 'Pangolin'; "/><img
@@ -96,6 +103,7 @@
         <hr>
 
         <div class="top-nav hiddenMobile">
+
             {% if user.is_anonymous %}
                 <a href="/accounts/login/" class="vertical hiddenMobile">Login</a>
             {% else %}
@@ -106,13 +114,10 @@
     </div>
     <!-- Sidebar Holder -->
     {% if not user.is_anonymous %}
-        {% if not user.is_anonymous %}
-            <div id="sidebar-header" class="collapsed loggedin">
-                {{ user.username }}
-            </div>
-        {% else %}
+        <div id="sidebar-header" class="collapsed loggedin">
+            {{ user.username }}
+        </div>
 
-        {% endif %}
         <button id="toggle-sidebar"><</button>
 
         <nav id="sidebar" class="collapsed {% if user.is_anonymous %}ontop{% endif %}">
@@ -149,5 +154,5 @@
         toggleSidebar.innerText = sidebar.classList.contains('collapsed') ? '>' : '<';
     };
 </script>
-
+</body>
 </html>

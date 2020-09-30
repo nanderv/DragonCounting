@@ -1,22 +1,24 @@
 {#{% load menu %}#}
 <ul class="sidebar-menu" style="max-width:100%">
-{#    {% render_menu 'sidebar-item' 'sidebar' %}#}
+    {#    {% render_menu 'sidebar-item' 'sidebar' %}#}
 
-    {% if user.is_authenticated %}
-        <li class="hiddenDesktop"><i>Normal menu below</i></li>
-    {% endif %}
-
-{#    {% render_menu 'mobile-only' 'top-left' %}#}
-{#    {% render_menu 'mobile-only' 'top-right' %}#}
-  {% if user.is_anonymous %}
-    <li class="treeview hiddenDesktop"><a href="/accounts/login/">
-        <i class="fa fa-plane"></i><span>Login</span>
+    <li class="treeview hiddenDesktop"><a href="{% url 'traffic_light.view' %}">
+        <i class="fa fa-users"></i><span>Crowd Status</span>
     </a></li>
-{% else %}
+    <li class="treeview hiddenDesktop"><a href="{% url 'reserve' %}">
+        <i class="fa fa-book"></i><span>Reserve</span>
+    </a></li>
+    {#    {% render_menu 'mobile-only' 'top-left' %}#}
+    {#    {% render_menu 'mobile-only' 'top-right' %}#}
+    {% if user.is_anonymous %}
+        <li class="treeview hiddenDesktop"><a href="/accounts/login/">
+            <i class="fa fa-plane"></i><span>Login</span>
+        </a></li>
+    {% else %}
         <li class="treeview hiddenDesktop"><a href="/accounts/logout/">
-        <i class="fa fa-plane"></i><span>Logout</span>
-    </a></li>
+            <i class="fa fa-plane"></i><span>Logout</span>
+        </a></li>
 
-{% endif %}
+    {% endif %}
 
 </ul>

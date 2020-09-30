@@ -59,17 +59,3 @@ class Reservation(models.Model):
     def __str__(self):
         return str(self.date) + "::" + str(self.timeslot) + " : " + self.name
 
-
-class Register(models.Model):
-    name = models.CharField(max_length=16)
-    email = models.CharField(max_length=128)
-
-    date = models.DateField()
-
-    @staticmethod
-    def wipe():
-        lst = Register.objects.filter(date__lt=date.today() - timedelta(days=28))
-        lst.delete()
-
-    def __str__(self):
-        return str(self.date) + "::" + " : " + self.name

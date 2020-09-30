@@ -1,6 +1,6 @@
 from django.forms import ModelForm, Select
 
-from reservations.models import Reservation, Register, Timeslot
+from reservations.models import Reservation, Timeslot
 
 from django.forms import Select
 
@@ -20,15 +20,3 @@ class EditForm(ModelForm):
                   }
         widgets={'timeslot': Select}
 
-
-class RegisterForm(ModelForm):
-    class Meta:
-        model = Register
-        fields = ['name',
-                  'email'
-
-
-                  ]
-        labels = {'name': 'Name',
-                  'email': 'Email',
-                  }

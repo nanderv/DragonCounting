@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Crowd Status{% endblock %}
+{% block title %}Reservation Portal{% endblock %}
 {% block content %}
-    On this web page, we count how crowded the drakenkelder is.
+    On this web page, we count how crowded the drakenkelder is. You can also reserve for your visit here.
     <hr>
     <div class="row">
         {% if not user.is_anonymous %}
-
-
             <div class="card col-sm-12  col-md-6">
                 <div class="card-body">
                     <h5 class="card-title">Change Status</h5>
@@ -70,16 +68,6 @@
             </div>
         </div>
 
-        <div class="card col-sm-12  col-md-6">
-            <div class="card-body">
-                <h5 class="card-title">Registering your visit</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Say that you were there</h6>
-                <p class="card-text">After entering the Drakenkelder, you should register the fact that you visited. If
-                    corona-cases are detected around your visit of the DK, you will be notified.</p>
-                <a href="{% url 'register' %}" class="card-link">Register</a>
-
-            </div>
-        </div>
 
     </div>
 
