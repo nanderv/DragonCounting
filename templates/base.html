@@ -3,7 +3,6 @@
 {% load static %}
 {#{% load menu %}#}
 <head>
-
     <link rel="apple-touch-icon" sizes="57x57" href="{% static 'icons/apple-icon-57x57.png' %}">
     <link rel="apple-touch-icon" sizes="60x60" href="{% static 'icons/apple-icon-60x60.png' %}">
     <link rel="apple-touch-icon" sizes="72x72" href="{% static 'icons/apple-icon-72x72.png' %}">
@@ -47,9 +46,6 @@
     <script src="{% static "jquery.js" %} "></script>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<body>
-
-<div id="wrapper" {% if user.is_anonymous %}class="isAnonymous"{% endif %}>
     <style>
         .top-nav {
             padding-top: 20px;
@@ -84,75 +80,69 @@
             src: url("{% static 'Present_Roman.ttf' %}");
         }
     </style>
+</head>
+<body>
+    <div id="wrapper" {% if user.is_anonymous %}class="isAnonymous"{% endif %}>
+        <div id="header" class="{% if user.is_anonymous %}isAnonymous{% endif %}">
+            <div class="top-nav-left hiddenMobile">
+                <a href="{% url 'traffic_light.view' %}" class="vertical hiddenMobile">Crowd Status</a>
+                <a href="{% url 'reserve' %}" class="vertical hiddenMobile">Reserve</a>
+                <a class="vertical"> </a>
+            </div>
 
+            <a href="/" class="logo-part" style=" text-align: center;width:100%; "><img
+                    src="{% static 'images/wurm.png' %}"
+                    style="height:75px;     font-family: 'Pangolin'; "/><img
+                    src="{% static 'images/flying_wurm.png' %}"
+                    style="height:75px;     font-family: 'Pangolin'; "/>
+            </a>
+            <hr>
 
-    <div id="header" class="{% if user.is_anonymous %}isAnonymous{% endif %}">
-        <div class="top-nav-left hiddenMobile">
-                        <a href="{% url 'traffic_light.view' %}" class="vertical hiddenMobile">Crowd Status</a>
-
-            <a href="{% url 'reserve' %}" class="vertical hiddenMobile">Reserve</a>
-            <a class="vertical"> </a>
-
+            <div class="top-nav hiddenMobile">
+                {% if user.is_anonymous %}
+                    <a href="/accounts/login/" class="vertical hiddenMobile">Login</a>
+                {% else %}
+                    <a href="/accounts/logout/" class="vertical hiddenMobile">Logout</a>
+                {% endif %}
+                <a class="vertical"> </a>
+            </div>
         </div>
-        <a href="/" class="logo-part" style=" text-align: center;width:100%; "><img
-                src="{% static 'images/wurm.png' %}"
-                style="height:75px;     font-family: 'Pangolin'; "/><img
-                src="{% static 'images/flying_wurm.png' %}"
-                style="height:75px;     font-family: 'Pangolin'; "/>
-        </a>
-        <hr>
 
-        <div class="top-nav hiddenMobile">
+        {% if not user.is_anonymous %}
+            <div id="sidebar-header" class="collapsed loggedin">
+                {{ user.username }}
+            </div>
+            <button id="toggle-sidebar"><</button>
+            <nav id="sidebar" class="collapsed {% if user.is_anonymous %}ontop{% endif %}">
+                {% include 'nav.html' %}
+            </nav>
+        {% else %}
+            <button id="toggle-sidebar"><</button>
+            <nav id="sidebar" class="collapsed {% if user.is_anonymous %}ontop{% endif %} grayedOut">
+                {% include 'nav.html' %}
+            </nav>
+        {% endif %}
 
-            {% if user.is_anonymous %}
-                <a href="/accounts/login/" class="vertical hiddenMobile">Login</a>
-            {% else %}
-                <a href="/accounts/logout/" class="vertical hiddenMobile">Logout</a>
-            {% endif %}
-            <a class="vertical"> </a>
-        </div>
+        <article id="content">
+            <h2>{% block title %}Title{% endblock %}</h2>
+            {% block content %}
+            {% endblock %}
+        </article>
+        {% if user.is_anonymous %}
+            <div id="rightBar"></div>
+        {% endif %}
     </div>
-    <!-- Sidebar Holder -->
-    {% if not user.is_anonymous %}
-        <div id="sidebar-header" class="collapsed loggedin">
-            {{ user.username }}
-        </div>
 
-        <button id="toggle-sidebar"><</button>
+    <script>
+        const sidebar = document.querySelector('#sidebar');
+        const sidebarH = document.querySelector('#sidebar-header');
+        const toggleSidebar = document.querySelector('#toggle-sidebar');
 
-        <nav id="sidebar" class="collapsed {% if user.is_anonymous %}ontop{% endif %}">
-            {% include 'nav.html' %}
-        </nav>
-    {% else %}
-        <button id="toggle-sidebar"><</button>
-        <nav id="sidebar" class="collapsed {% if user.is_anonymous %}ontop{% endif %} grayedOut">
-            {% include 'nav.html' %}
-        </nav>
-
-    {% endif %}
-    <!-- Page Content Holder -->
-    <article id="content">
-        <h2>{% block title %}Title{% endblock %}</h2>
-        {% block content %}
-        {% endblock %}
-    </article>
-    {% if user.is_anonymous %}
-        <div id="rightBar"></div>
-    {% endif %}
-</div>
-{##}
-{#<!-- jQuery CDN - Slim version (=without AJAX) -->#}
-
-<script>
-    const sidebar = document.querySelector('#sidebar');
-    const sidebarH = document.querySelector('#sidebar-header');
-    const toggleSidebar = document.querySelector('#toggle-sidebar');
-
-    toggleSidebar.onclick = () => {
-        sidebar.classList.toggle('collapsed');
-        sidebarH.classList.toggle('collapsed');
-        toggleSidebar.innerText = sidebar.classList.contains('collapsed') ? '>' : '<';
-    };
-</script>
+        toggleSidebar.onclick = () => {
+            sidebar.classList.toggle('collapsed');
+            sidebarH.classList.toggle('collapsed');
+            toggleSidebar.innerText = sidebar.classList.contains('collapsed') ? '>' : '<';
+        };
+    </script>
 </body>
 </html>

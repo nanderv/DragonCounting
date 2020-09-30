@@ -13,7 +13,6 @@
                     <h6 class="card-subtitle mb-2 text-muted">How Busy is the DK?</h6>
                     <p class="card-text">
                         The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
-
                     <form method="post" action="#">
                         {% csrf_token %}
                         <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
@@ -22,23 +21,16 @@
                     </p>
                     <a class="btn btn-primary" href="{% url 'traffic_light.diff' -1 %}#here" class="card-link">-1</a>
                     <a class="btn btn-primary" href="{% url 'traffic_light.diff' 1 %}#here" class="card-link">+1</a>
-
                 </div>
             </div>
-
-
         {% endif %}
 
         <div class="card col-sm-12 col-md-6">
             <div class="card-body">
                 <h5 class="card-title">Room Status</h5>
-
-
                 <div style-="margin: auto;">
-
                     {% if open %}
                         <h6 class="card-subtitle mb-2 text-muted">The drakenkelder is open</h6>
-
                         {% if full %}
                             <img style="width:100px;" src="{% static 'images/light/yellow.png' %}"><br/>
                             The room is full :(
@@ -47,7 +39,6 @@
                             The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
                         {% endif %}
                         </p>
-
                     {% else %}
                         <h6 class="card-subtitle mb-2 text-muted">The drakenkelder is closed</h6>
                         <p class="card-text">
@@ -67,8 +58,6 @@
                 <a href="{% url 'reserve' %}" class="card-link">Reserve here</a>
             </div>
         </div>
-
-
     </div>
 
     <h2>The Drakenkelder is the association room of two associations at the University of Twente:</h2>
@@ -77,17 +66,16 @@
             <div class="card-body">
                 <h5 class="card-title">Fanaat</h5>
                 <p class="card-text">
-
                     <a href="https://fanaat.utwente.nl">Fanaat</a> is the board games association at the University of
                     Twente.
                 </p>
             </div>
         </div>
+
         <div class="card col-sm-12  col-md-6">
             <div class="card-body">
                 <h5 class="card-title">Bellettrie</h5>
                 <p class="card-text">
-
                     <a href="https://bellettrie.utwente.nl">Bellettrie</a> is the library association at the University of
                     Twente.
                 </p>

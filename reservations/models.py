@@ -5,9 +5,6 @@ from datetime import date, timedelta
 from django.db.models import CASCADE
 from django.utils.functional import lazy
 
-FULL_LIST = [('afternoon', 'Afternoon'), ('evening', 'Evening'), ('writing', 'Writing Evening')]
-SLOT_CAPACITIES = {'afternoon': 10, 'evening': 10, 'writing': 10}
-
 
 def get_slots_is_open(slot_name, date_to_measure: date):
     if slot_name == 'afternoon' or slot_name == 'evening':
@@ -53,7 +50,7 @@ class Reservation(models.Model):
 
     @staticmethod
     def wipe():
-        lst = Reservation.objects.filter(date__lt=date.today() - timedelta(days=28))
+        lst = Reservation.objects.filter(date__lt=date.today() - timedelta(days=1))
         lst.delete()
 
     def __str__(self):

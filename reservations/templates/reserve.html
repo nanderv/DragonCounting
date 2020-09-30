@@ -3,65 +3,66 @@
 
 {% block title %}Reserve for Bellettrie{% endblock %}
 {% block content %}
-    Due to government regulations, we have to work with reservations. If you want to visit Bellettrie, you'll have to reserve.<br />
-    For the official opening hours, this can be done here. For more information about the other situations, see <a href="https://www.bellettrie.utwente.nl/pages/basic/reservations">this page</a> on the main website.
+    Due to government regulations, we have to work with reservations. If you want to visit Bellettrie, you'll have to reserve.
+    <br/>
+
+    For the official opening hours, this can be done here. For more information about the other situations, see
+    <a href="https://www.bellettrie.utwente.nl/pages/basic/reservations">this page</a> on the main website.
+
     <div class="row">
-    <div class="card col-md-12  col-lg-6">
-        <div class="card-body">
-            <h5 class="card-title">How busy are Today's timeslots?</h5>
-            <p class="card-text">
-            <table>
-                <tr>
-                    <th>Timeslot Name</th>
-                    <th>In Use</th>
-                    <th>Capacity</th>
-                </tr>
-                {% for timeslot in timeslots %}
-                    {% if timeslot.is_on_today %}
-                        {% if timeslot.get_len_res == timeslot.capacity %}
-                            <tr>
-                                <td>{{ timeslot.name }}</td>
-                                <td colspan="2">FULL</td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td>{{ timeslot.name }}</td>
-                                <td>{{ timeslot.get_len_res }}</td>
-                                <td>{{ timeslot.capacity }}</td>
-                            </tr>
+        <div class="card col-md-12  col-lg-6">
+            <div class="card-body">
+                <h5 class="card-title">How busy are Today's timeslots?</h5>
+                <p class="card-text">
+                <table>
+                    <tr>
+                        <th>Timeslot Name</th>
+                        <th>In Use</th>
+                        <th>Capacity</th>
+                    </tr>
+                    {% for timeslot in timeslots %}
+                        {% if timeslot.is_on_today %}
+                            {% if timeslot.get_len_res == timeslot.capacity %}
+                                <tr>
+                                    <td>{{ timeslot.name }}</td>
+                                    <td colspan="2">FULL</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{{ timeslot.name }}</td>
+                                    <td>{{ timeslot.get_len_res }}</td>
+                                    <td>{{ timeslot.capacity }}</td>
+                                </tr>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </table>
-            </p>
-        </div>
-    </div>
-
-    <div class="card col-md-12  col-lg-6">
-        <div class="card-body">
-            <h5 class="card-title">Reservations</h5>
-            {% if instance %}
-                <h6 class="card-subtitle mb-2 text-muted">Reservation succesful!</h6>
-                <a href="{% url 'reserve' %}" class="card-link">Reserve another</a>
-
-            {% else %}
-                <h6 class="card-subtitle mb-2 text-muted">Fill in the form</h6>
-                <p class="card-text">Fill in your name and when you want to visit.
-                <form method="post" action='#'>
-                    {% csrf_token %}
-                    <table>
-                        {{ form.as_table }}
-
-                    </table>
-                    <input type="submit" value="Register">
-                </form>
+                    {% endfor %}
+                </table>
                 </p>
-            {% endif %}
+            </div>
+        </div>
 
+        <div class="card col-md-12  col-lg-6">
+            < class="card-body">
+                <h5 class="card-title">Reservations</h5>
+                {% if instance %}
+                    <h6 class="card-subtitle mb-2 text-muted">Reservation succesful!</h6>
+                    <a href="{% url 'reserve' %}" class="card-link">Reserve another</a>
+                {% else %}
+                    <h6 class="card-subtitle mb-2 text-muted">Fill in the form</h6>
+                    <p class="card-text">
+                        Fill in your name and when you want to visit.
+                        <form method="post" action='#'>
+                            {% csrf_token %}
+                            <table>
+                                {{ form.as_table }}
+                            </table>
+                            <input type="submit" value="Register">
+                        </form>
+                    </p>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
-
 
     {% if perms.reservations.change_reservation %}
         <h3>Reservations</h3>
@@ -80,10 +81,8 @@
                 </table>
             {% endif %}
         {% endfor %}
-
     {% endif %}
     <h3>Privacy:</h3>
     This data will be visible to people who can open the room, during the day on which the reservation was made.<br/>
-    The data submitted here will be stored for four weeks, for contact tracing in case of a corona case within the association.
-    This data will only be read in this case.
+    The data submitted here will be stored for less than twenty-four hours after the end of the reservation.
 {% endblock %}
