@@ -4,4 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.view, name='reserve'),
+    path('done', views.view2, name='reserved'),
+    path('delete/<slug:id>', views.delete, name='deleted')
 ]

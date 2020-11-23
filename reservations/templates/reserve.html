@@ -3,10 +3,8 @@
 
 {% block title %}Reserve for Bellettrie{% endblock %}
 {% block content %}
-    Due to government regulations, we have to work with reservations. If you want to visit Bellettrie, you'll have to reserve.
-    <br/>
-
-    For the official opening hours, this can be done here. For more information about the other situations, see
+    Due to government regulations, we have to work with reservations. If you want to visit Bellettrie during opening
+    hours, you'll have to reserve. For more information about the other situations, see
     <a href="https://www.bellettrie.utwente.nl/pages/basic/reservations">this page</a> on the main website.
 
     <div class="row">
@@ -47,17 +45,23 @@
                 {% if instance %}
                     <h6 class="card-subtitle mb-2 text-muted">Reservation succesful!</h6>
                     <a href="{% url 'reserve' %}" class="card-link">Reserve another</a>
+                    {% if instance != True %}
+                    <head>
+                        <meta http-equiv="refresh" content="0;url={% url 'reserved' %}">
+                    </head>
+                        {% endif %}
                 {% else %}
                     <h6 class="card-subtitle mb-2 text-muted">Fill in the form</h6>
                     <p class="card-text">
-                        Fill in your name and when you want to visit. Observe that these reservations are only possible for the day itself. Therefore, it's meaningless to reserve for 13:00-13:30 if it's 14:00.
-                        <form method="post" action='#'>
-                            {% csrf_token %}
-                            <table>
-                                {{ form.as_table }}
-                            </table>
-                            <input type="submit" value="Register">
-                        </form>
+                        Fill in your name and when you want to visit. Observe that these reservations are only possible
+                        for the day itself. Therefore, it's meaningless to reserve for 13:00-13:30 if it's 14:00.
+                    <form method="post" action='#'>
+                        {% csrf_token %}
+                        <table>
+                            {{ form.as_table }}
+                        </table>
+                        <input type="submit" value="Register">
+                    </form>
                     </p>
                 {% endif %}
             </div>
@@ -75,7 +79,7 @@
                     </tr>
                     {% for reservation in timeslot.get_reservations %}
                         <tr>
-                            <td>{{ reservation.name }}</td>
+                            <td>{{ reservation.name }}<a href="{% url 'deleted' reservation.pk %}">Yeet</a></a></td>
                         </tr>
                     {% endfor %}
                 </table>

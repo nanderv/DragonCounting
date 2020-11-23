@@ -1,6 +1,6 @@
 from datetime import date
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from reservations.forms import EditForm
@@ -21,3 +21,19 @@ def view(request):
     timeslots = Timeslot.objects.all()
     return render(request, 'reserve.html', {'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots':timeslots})
 
+
+def view2(request):
+    Reservation.wipe()
+    instance = None
+    form = EditForm()
+
+    timeslots = Timeslot.objects.all()
+    return render(request, 'reserve.html', {'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots':timeslots})
+
+
+def delete(request, id):
+    reservation = Reservation.objects.get(pk=id)
+    if not request.GET.get('confirm'):
+        return render(request, 'are-you-sure.html', {'what': "delete reservation with name " + reservation.name +" for " + reservation.timeslot.name})
+    reservation.delete()
+    return redirect('reserve')
