@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{% if POST %}Reservation Succesful{% else %}Options for reserving{% endif %}{% endblock %}
+{% block content %}
+    {% if POST %}
+
+        {% else %}
+        {% if warning %}<p style="color:red">{{ warning }}</p><hr>{% endif %}
+
+
+        <h4>Please select what you want to do at Bellettrie.</h4>
+        You're only allowed to pick up books if you have reserved a book. <br/>
+        You're only allowed to hand in a book if you've lent out any books.
+
+        <form method="post" action="#">
+        {% csrf_token %}
+        <table>
+            {% for option in options %}
+            <tr><td><label for="{{ option.pk }}">{{ option.name }}</label></td><td> <input type="checkbox" id="{{ option.id }}" name="{{ option.id }}"></td></tr>
+            {% endfor %}
+        </table>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    {% endif %}
+{% endblock %}

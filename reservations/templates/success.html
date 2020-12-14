@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{Reservation Succesful{% endblock %}
+{% block content %}
+    {% if POST %}
+        Reservation succesful<br />
+        <a href="{% url 'reserve' %}">Reserve more</a>
+
+    {% endif %}
+{% endblock %}

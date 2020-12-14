@@ -20,3 +20,4 @@ class EditForm(ModelForm):
                   }
         widgets={'timeslot': Select}
 
+

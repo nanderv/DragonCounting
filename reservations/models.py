@@ -51,7 +51,8 @@ class Timeslot(models.Model):
 
     def __str__(self):
         return self.name
-
+    def get_options(self):
+        return TimeslotOption.objects.filter(timeslot=self).order_by('name')
 
 class TimeslotOption(models.Model):
     name = models.CharField(max_length=32)
@@ -72,8 +73,10 @@ class Reservation(models.Model):
 
     def __str__(self):
         return str(self.date) + "::" + str(self.timeslot) + " : " + self.name
-
+    def get_options(self):
+        return TimeslotOptionValue.objects.filter(reservation=self).order_by('timeslot_option__name')
 
 class TimeslotOptionValue(models.Model):
-    reservation = models.ForeignKey(Reservation, on_delete=CASCADE)
+    timeslot_option = models.ForeignKey(TimeslotOption, on_delete=CASCADE)
     value = models.BooleanField()
+    reservation=models.ForeignKey(Reservation, on_delete=CASCADE)
