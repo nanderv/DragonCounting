@@ -24,6 +24,8 @@ class TimeslotManager(models.Manager):
         return self.model.objects.filter(pk__in=result_list)
 
 
+
+
 class Timeslot(models.Model):
     name = models.CharField(max_length=32)
     on_day = models.CharField(max_length=7)
@@ -43,6 +45,13 @@ class Timeslot(models.Model):
         return self.name
 
 
+class TimeslotOption(models.Model):
+    name = models.CharField(max_length=32)
+    timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
+
+    def __str__(self):
+        return self.name
+
 class Reservation(models.Model):
     timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
     name = models.CharField(max_length=16)
@@ -56,3 +65,7 @@ class Reservation(models.Model):
     def __str__(self):
         return str(self.date) + "::" + str(self.timeslot) + " : " + self.name
 
+
+class TimeslotOptionValue(models.Model):
+    reservation = models.ForeignKey(Reservation, on_delete=CASCADE)
+    value = models.BooleanField()
