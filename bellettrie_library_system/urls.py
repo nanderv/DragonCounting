@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
 from django.shortcuts import redirect
 
@@ -22,6 +23,9 @@ def redirect_view(request):
     response = redirect('/crowds/status')
     return response
 
+def robot_view(request):
+    return HttpResponse("""User-agent: *
+Disallow: /""",content_type='text/plain')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,5 +35,6 @@ urlpatterns = [
     path('reserve/', include('reservations.urls')),
     path('', redirect_view, name='homepage.old_link'),
     path('templogin/', include('templogin.urls')),
+    path('robots.txt', robot_view, name='robots'),
 
 ]

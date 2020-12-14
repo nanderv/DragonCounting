@@ -15,13 +15,21 @@ def get_slots_is_open(slot_name, date_to_measure: date):
 
 class TimeslotManager(models.Manager):
     def only_current(self):
-        from django.db import connection
-        result_list = []
-        timeslots = self.model.objects.all()
-        for timeslot in timeslots:
-            if timeslot.is_on_today() and timeslot.get_len_res() < timeslot.capacity:
-                result_list.append(timeslot.pk)
-        return self.model.objects.filter(pk__in=result_list)
+        reservations = Reservation.objects.filter(date=date.today())
+        # Count reservations
+        res = dict()
+        for reservation in reservations:
+            res[reservation.timeslot] = res.get(reservation.timeslot, 0) + 1
+
+        # Set exclusion list
+        excl = []
+        for z in res.keys():
+            if res[z] >= z.capacity:
+                excl.append(z.pk)
+
+        # Final query
+        iso_day = str(date.today().isoweekday())
+        return self.model.objects.filter(on_day__contains=iso_day).exclude(pk__in=excl)
 
 
 

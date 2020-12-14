@@ -43,7 +43,7 @@
         </div>
 
         <div class="card col-md-12  col-lg-6">
-            < class="card-body">
+            <div class="card-body">
                 <h5 class="card-title">Reservations</h5>
                 {% if instance %}
                     <h6 class="card-subtitle mb-2 text-muted">Reservation succesful!</h6>
@@ -51,7 +51,7 @@
                 {% else %}
                     <h6 class="card-subtitle mb-2 text-muted">Fill in the form</h6>
                     <p class="card-text">
-                        Fill in your name and when you want to visit.
+                        Fill in your name and when you want to visit. Observe that these reservations are only possible for the day itself. Therefore, it's meaningless to reserve for 13:00-13:30 if it's 14:00.
                         <form method="post" action='#'>
                             {% csrf_token %}
                             <table>
@@ -85,5 +85,5 @@
     {% endif %}
     <h3>Privacy:</h3>
     This data will be visible to people who can open the room, during the day on which the reservation was made.<br/>
-    The data submitted here will be stored for less than twenty-four hours after the end of the reservation.
+    The data submitted here will be stored for less than forty-eight hours after the end of the reservation.
 {% endblock %}
