@@ -22,7 +22,7 @@ class EditForm(ModelForm):
     date = ChoiceField(choices=today_options())
     def __init__(self,*args,**kwargs):
         super (EditForm,self ).__init__(*args,**kwargs) # populates the post
-        self.fields['timeslot'].queryset = Timeslot.objects.available_on_day(only_non_empty=True)
+        self.fields['timeslot'].queryset = Timeslot.objects.all()
     class Meta:
         model = Reservation
         fields = ['name',

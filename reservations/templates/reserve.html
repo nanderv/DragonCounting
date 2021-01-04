@@ -46,10 +46,10 @@
                     <h6 class="card-subtitle mb-2 text-muted">Reservation succesful!</h6>
                     <a href="{% url 'reserve' %}" class="card-link">Reserve another</a>
                     {% if instance != True %}
-                    <head>
-                        <meta http-equiv="refresh" content="0;url={% url 'reserved' %}">
-                    </head>
-                        {% endif %}
+                        <head>
+                            <meta http-equiv="refresh" content="0;url={% url 'reserved' %}">
+                        </head>
+                    {% endif %}
                 {% else %}
                     <h6 class="card-subtitle mb-2 text-muted">Fill in the form</h6>
                     <p class="card-text">
@@ -62,23 +62,27 @@
 
                         </table>
                         <script>
-                        vals = []
+                            vals = []
                             {% for k,v in tds.items %}
-                            vals['{{ k }}']= [new Option('---------', null,true, true){% for z in v %},new Option('{{ z.name }}', {{ z.pk}}){% endfor %}];
+                                vals['{{ k }}'] = [new Option('---------', null, true, true){% for z in v %},new Option('{{ z.name }}', {{ z.pk}}){% endfor %}];
 
-                        {% endfor %}
-                            document.getElementById('id_date').onchange=function(val){
+                            {% endfor %}
+                            function run() {
                                 cit = document.getElementById('id_timeslot')
 
-                                cit.options.length=0;
-                                i=0
-                                for (v of  vals[document.getElementById('id_date').value]){
+                                cit.options.length = 0;
+                                i = 0
+                                for (v of vals[document.getElementById('id_date').value]) {
                                     console.log(v)
                                     cit.options[i] = v;
                                     i++
                                 }
-
                             }
+
+                            document.getElementById('id_date').onchange = function (val) {
+                                run()
+                            }
+                            run();
                         </script>
 
                         <input type="submit" value="Register">
@@ -98,17 +102,17 @@
                     <tr>
                         <th>Name</th>
                         {% for option in timeslot.get_options %}
-                            <th>{{option.name}}</th>
+                            <th>{{ option.name }}</th>
                         {% endfor %}
-                    <td>Yeet</td>
+                        <td>Yeet</td>
                     </tr>
                     {% for reservation in timeslot.get_reservations %}
                         <tr>
                             <td>{{ reservation.name }}</td>
-                        {% for option in reservation.get_options %}
-                            <td>{% if option.value %}yes{% else %} no{% endif %}</td>
+                            {% for option in reservation.get_options %}
+                                <td>{% if option.value %}yes{% else %} no{% endif %}</td>
                             {% endfor %}
-                        <td><a href="{% url 'deleted' reservation.pk %}">Yeet</a></td>
+                            <td><a href="{% url 'deleted' reservation.pk %}">Yeet</a></td>
 
                         </tr>
                     {% endfor %}

@@ -16,6 +16,7 @@ def view(request):
 
     if request.POST:
         form = EditForm(request.POST)
+
         instance = form.save(commit=False)
         if not instance.date:
             instance.date = date.today()
