@@ -36,6 +36,8 @@
                     {% endfor %}
                 </table>
                 </p>
+
+
             </div>
         </div>
 
@@ -119,6 +121,42 @@
                 </table>
             {% endif %}
         {% endfor %}
+
+
+
+
+        <h5 class="card-title">When do we need  to open Tomorrow:?</h5>
+        <p class="card-text">
+        <table>
+            <tr>
+                <th>Timeslot Name</th>
+
+            </tr>
+            {% for timeslot in timeslots_tmrw %}
+                <tr>
+                    <td>{{ timeslot.name }}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+        </p>
+
+
+        <h5 class="card-title">When do we need to open overmorrow?</h5>
+        <p class="card-text">
+        <table>
+            <tr>
+                <th>Timeslot Name</th>
+            </tr>
+            {% for timeslot in timeslots_omrw %}
+                <tr>
+                    <td>aaaaaa{{ timeslot.name }}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+        </p>
+
     {% endif %}
     <h3>Privacy:</h3>
     This data will be visible to people who can open the room, during the day on which the reservation was made.<br/>
