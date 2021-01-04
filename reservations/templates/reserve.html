@@ -64,7 +64,7 @@
                         <script>
                         vals = []
                             {% for k,v in tds.items %}
-                            vals['{{ k }}']= [new Option('---------', None,true, true){% for z in v %},new Option('{{ z.name }}', {{ z.pk}}){% endfor %}];
+                            vals['{{ k }}']= [new Option('---------', null,true, true){% for z in v %},new Option('{{ z.name }}', {{ z.pk}}){% endfor %}];
 
                         {% endfor %}
                             document.getElementById('id_date').onchange=function(val){
