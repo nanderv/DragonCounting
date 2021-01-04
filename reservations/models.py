@@ -14,8 +14,10 @@ def get_slots_is_open(slot_name, date_to_measure: date):
 
 
 class TimeslotManager(models.Manager):
-    def only_current(self):
-        reservations = Reservation.objects.filter(date=date.today())
+    def only_current(self, dt=None):
+        if dt is None:
+            dt = date.today()
+        reservations = Reservation.objects.filter(date=dt)
         # Count reservations
         res = dict()
         for reservation in reservations:
@@ -28,10 +30,21 @@ class TimeslotManager(models.Manager):
                 excl.append(z.pk)
 
         # Final query
-        iso_day = str(date.today().isoweekday())
+        iso_day = str(dt.isoweekday())
         return self.model.objects.filter(on_day__contains=iso_day).exclude(pk__in=excl)
 
+    def available_on_day(self, day=None, only_non_empty=False):
+        if day is None:
+            day = date.today()
 
+        tss = self.only_current(day)
+        if not only_non_empty:
+            return tss
+        result = []
+        for ts in tss:
+            if len(Reservation.objects.filter(date=day, timeslot=ts)) > 0:
+                result.append(ts.pk)
+        return self.model.objects.filter(pk__in=result)
 
 
 class Timeslot(models.Model):
@@ -51,8 +64,10 @@ class Timeslot(models.Model):
 
     def __str__(self):
         return self.name
+
     def get_options(self):
         return TimeslotOption.objects.filter(timeslot=self).order_by('name')
+
 
 class TimeslotOption(models.Model):
     name = models.CharField(max_length=32)
@@ -60,6 +75,7 @@ class TimeslotOption(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Reservation(models.Model):
     timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
@@ -73,10 +89,12 @@ class Reservation(models.Model):
 
     def __str__(self):
         return str(self.date) + "::" + str(self.timeslot) + " : " + self.name
+
     def get_options(self):
         return TimeslotOptionValue.objects.filter(reservation=self).order_by('timeslot_option__name')
+
 
 class TimeslotOptionValue(models.Model):
     timeslot_option = models.ForeignKey(TimeslotOption, on_delete=CASCADE)
     value = models.BooleanField()
-    reservation=models.ForeignKey(Reservation, on_delete=CASCADE)
+    reservation = models.ForeignKey(Reservation, on_delete=CASCADE)

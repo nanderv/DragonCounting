@@ -1,19 +1,33 @@
-from django.forms import ModelForm, Select
+from datetime import datetime, timedelta
+
+from django.forms import ModelForm, Select, forms, ChoiceField
 
 from reservations.models import Reservation, Timeslot
 
-from django.forms import Select
 
-
+CATEGORIES = (
+    ('COM', 'Combat'),
+    ('CRA', 'Crafting'),
+    ('WAR', 'Warfare'),
+)
+def today_options():
+    return (
+        (
+        datetime.now().date(), "Today: "+ str(datetime.now().date().isoformat())
+        ),
+        ( (datetime.now()+timedelta(days=1)).date(), "Tomorrow: "+ str((datetime.now()+timedelta(days=1)).date().isoformat())),
+        ((datetime.now() + timedelta(days=2)).date(), "Overmorrow: " + str((datetime.now() + timedelta(days=2)).date().isoformat())),
+    )
 class EditForm(ModelForm):
+    date = ChoiceField(choices=today_options())
     def __init__(self,*args,**kwargs):
         super (EditForm,self ).__init__(*args,**kwargs) # populates the post
-        self.fields['timeslot'].queryset = Timeslot.objects.only_current()
+        self.fields['timeslot'].queryset = Timeslot.objects.available_on_day(only_non_empty=True)
     class Meta:
         model = Reservation
         fields = ['name',
+                  'date',
                   'timeslot',
-
                   ]
         labels = {'name': 'Name',
                   'timeslot': 'Timeslot'

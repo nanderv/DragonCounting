@@ -59,7 +59,28 @@
                         {% csrf_token %}
                         <table>
                             {{ form.as_table }}
+
                         </table>
+                        <script>
+                        vals = []
+                            {% for k,v in tds.items %}
+                            vals['{{ k }}']= [new Option('---------', None,true, true){% for z in v %},new Option('{{ z.name }}', {{ z.pk}}){% endfor %}];
+
+                        {% endfor %}
+                            document.getElementById('id_date').onchange=function(val){
+                                cit = document.getElementById('id_timeslot')
+
+                                cit.options.length=0;
+                                i=0
+                                for (v of  vals[document.getElementById('id_date').value]){
+                                    console.log(v)
+                                    cit.options[i] = v;
+                                    i++
+                                }
+
+                            }
+                        </script>
+
                         <input type="submit" value="Register">
                     </form>
                     </p>
