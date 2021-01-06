@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, time
 
 from django.shortcuts import render, redirect
 from django.db import transaction
@@ -8,7 +8,7 @@ from reservations.forms import EditForm
 from reservations.models import Reservation, Timeslot, TimeslotOption, TimeslotOptionValue
 from django.conf import settings
 
-
+HOURS = 16
 def view(request):
     Reservation.wipe()
     instance = None
@@ -26,15 +26,24 @@ def view(request):
     today = date.today()
     data_dict[today.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(today, True)
     tomorrow = date.today() + timedelta(days=1)
-    data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow)
+    if datetime.now().time() > time(HOURS, 0):
+        data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow,True)
+    else:
+        data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow)
+
     overmorrow = date.today() + timedelta(days=2)
     data_dict[overmorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(overmorrow)
     timeslots = Timeslot.objects.available_on_day(only_non_empty=True)
-    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
-    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
+    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=False)
+    if datetime.now().time() > time(HOURS, 0):
+        print(Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True))
+        timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
+
+    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=False)
 
     return render(request, 'reserve.html', {'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
                                             'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
+
 
 def view2(request):
     Reservation.wipe()
@@ -44,13 +53,20 @@ def view2(request):
     today = date.today()
     data_dict[today.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(today, True)
     tomorrow = date.today() + timedelta(days=1)
-    data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow)
+    if datetime.now().time() > time(HOURS, 0):
+        data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow,True)
+    else:
+        data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow)
     overmorrow = date.today() + timedelta(days=2)
     data_dict[overmorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(overmorrow)
     timeslots = Timeslot.objects.available_on_day(only_non_empty=True)
-    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
-    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
-    return render(request, 'reserve.html', {'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots, 'timeslots_tmrw': timeslots_tmrw,  'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
+    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=False)
+    if datetime.now().time() > time(HOURS, 0):
+        timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
+    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=False)
+    return render(request, 'reserve.html',
+                  {'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots, 'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
+
 
 @transaction.atomic
 def options(request, id, name, date):
@@ -67,6 +83,7 @@ def options(request, id, name, date):
             return render(request, 'options.html', {'instance': True, 'timeslot': timeslot, 'options': options, 'warning': 'You can only visit Bellettrie for one of the reasons below.'})
         return redirect('reserved')
     return render(request, 'options.html', {'instance': True, 'timeslot': timeslot, 'options': options})
+
 
 def delete(request, id):
     reservation = Reservation.objects.get(pk=id)
