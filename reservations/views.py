@@ -16,10 +16,10 @@ def view(request):
 
     if request.POST:
         form = EditForm(request.POST)
-
-        instance = form.save(commit=False)
-        if not instance.date:
-            instance.date = date.today()
+        if form.is_valid():
+            instance = form.save(commit=False)
+            if not instance.date:
+                instance.date = date.today()
 
         return redirect('reserve.options', instance.timeslot.id, instance.name, instance.date)
     data_dict = dict()
