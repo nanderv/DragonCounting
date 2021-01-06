@@ -34,12 +34,8 @@ def view(request):
     overmorrow = date.today() + timedelta(days=2)
     data_dict[overmorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(overmorrow)
     timeslots = Timeslot.objects.available_on_day(only_non_empty=True)
-    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=False)
-    if datetime.now().time() > time(HOURS, 0):
-        print(Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True))
-        timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
-
-    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=False)
+    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
+    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
 
     return render(request, 'reserve.html', {'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
                                             'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
@@ -60,10 +56,8 @@ def view2(request):
     overmorrow = date.today() + timedelta(days=2)
     data_dict[overmorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(overmorrow)
     timeslots = Timeslot.objects.available_on_day(only_non_empty=True)
-    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=False)
-    if datetime.now().time() > time(HOURS, 0):
-        timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
-    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=False)
+    timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
+    timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
     return render(request, 'reserve.html',
                   {'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots, 'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
 
