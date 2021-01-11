@@ -4,7 +4,8 @@
 {% block title %}Reserve for Bellettrie{% endblock %}
 {% block content %}
     Due to government regulations, we have to work with reservations. If you want to visit Bellettrie during opening
-    hours, you'll have to reserve. At the moment, we're only open for picking up books and returning them. If you have a specific situation, please contact the board.
+    hours, you'll have to reserve. At the moment, we're only open for picking up books and returning them. If you have a
+    specific situation, please contact the board.
     <a href="https://www.bellettrie.utwente.nl/pages/basic/reservations">this page</a> on the main website.
 
     <div class="row">
@@ -55,14 +56,19 @@
                 {% else %}
                     <h6 class="card-subtitle mb-2 text-muted">Fill in the form</h6>
                     <p class="card-text">
-                        Fill in your name and when you want to visit. Each timeslot has a limited capacity; if it's full, please select another one. For reserving, the following rules apply:<br>
-                        <ul>
+                        Fill in your name and when you want to visit. Each timeslot has a limited capacity; if it's full,
+                        please
+                        select another one. For reserving, the following rules apply:<br>
+                    <ul>
                         <li>Reservations open two days before a day</li>
                         <li>Reservations close on the day before, at 16:00</li>
                         <li>Reservations stay open if a timeslot isn't full yet, but isn't empty either.</li>
-                        </ul>
-                    The last rule is there, because we don't want our openers to have to keep the room open if nobody wants to visit. <br>
-                        Observe that on the day itself, it's possible to reserve for all timeslots on the day, even ones that already took place. Therefore, it's meaningless to reserve for 13:00-13:30 if it's 14:00.
+                    </ul>
+                    The last rule is there, because we don't want our openers to have to keep the room open if nobody wants to
+                    visit. <br>
+                    Observe that on the day itself, it's possible to reserve for all timeslots on the day, even ones that
+                    already
+                    took place. Therefore, it's meaningless to reserve for 13:00-13:30 if it's 14:00.
                     <form method="post" action='#'>
                         {% csrf_token %}
                         <table>
@@ -123,25 +129,41 @@
                             <td><a href="{% url 'deleted' reservation.pk %}">Yeet</a></td>
 
                         </tr>
+                    {% empty %}
+                        No Reservations for this timeslot; no opener needs to be present.
                     {% endfor %}
                 </table>
             {% endif %}
+        {% empty %}
+            No timeslots require opening today
         {% endfor %}
 
 
-
-
-        <h5 class="card-title">When do we need  to open Tomorrow:?</h5>
+        <h5 class="card-title">When do we need to open Tomorrow:?</h5>
         <p class="card-text">
         <table>
-            <tr>
-                <th>Timeslot Name</th>
 
-            </tr>
             {% for timeslot in timeslots_tmrw %}
+                {% if forloop.first %}
+                <tr>
+                    <th>Timeslot Name</th>
+                </tr>
+            {% endif %}
+
                 <tr>
                     <td>{{ timeslot.name }}</td>
                 </tr>
+            {% empty %}
+                {% if after_time %}
+                    <tr>
+                        <td>No reservations for this day; no opener needs to be present</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>No reservations for this day yet, but someone can still reserve.</td>
+                    </tr>
+                {% endif %}
+
 
             {% endfor %}
         </table>
@@ -151,14 +173,20 @@
         <h5 class="card-title">When do we need to open overmorrow?</h5>
         <p class="card-text">
         <table>
-            <tr>
-                <th>Timeslot Name</th>
-            </tr>
+
             {% for timeslot in timeslots_omrw %}
+                {% if forloop.first %}
+                    <tr>
+                        <th>Timeslot Name</th>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td>{{ timeslot.name }}</td>
                 </tr>
-
+            {% empty %}
+                <tr>
+                    <td>No reservations for this timeslot yet, but someone can still reserve.</td>
+                </tr>
             {% endfor %}
         </table>
         </p>
@@ -166,7 +194,11 @@
     {% endif %}
     <h3>Privacy:</h3>
     This data will be visible to people who can open the room, during the day for which the reservation was made.<br/>
-    The fact that <i>somebody</i> reserved is visible to all openers from the moment of the reservation, until the reservation is removed from the system.<br />
-    The data submitted here will be stored for less than forty-eight hours after the end of the reservation.<br />
-    Besides this, our web committee has access to the data, in case of technical issues. The web committee also cannot access the data beyond forty-eight hours after the end of the reservation.
+    The fact that
+    <i>somebody</i> reserved is visible to all openers from the moment of the reservation, until the reservation is removed
+    from the system.
+    <br/>
+    The data submitted here will be stored for less than forty-eight hours after the end of the reservation.<br/>
+    Besides this, our web committee has access to the data, in case of technical issues. The web committee also cannot access
+    the data beyond forty-eight hours after the end of the reservation.
 {% endblock %}

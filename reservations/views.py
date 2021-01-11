@@ -8,7 +8,7 @@ from reservations.forms import EditForm
 from reservations.models import Reservation, Timeslot, TimeslotOption, TimeslotOptionValue
 from django.conf import settings
 
-HOURS = 16
+HOURS = 15
 def view(request):
     Reservation.wipe()
     instance = None
@@ -26,7 +26,10 @@ def view(request):
     today = date.today()
     data_dict[today.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(today, True)
     tomorrow = date.today() + timedelta(days=1)
+    trd = False
+
     if datetime.now().time() > time(HOURS, 0):
+        trd=True
         data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow,True)
     else:
         data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow)
@@ -37,7 +40,7 @@ def view(request):
     timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
     timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
 
-    return render(request, 'reserve.html', {'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
+    return render(request, 'reserve.html', {'after_time':trd,'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
                                             'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
 
 
@@ -49,7 +52,9 @@ def view2(request):
     today = date.today()
     data_dict[today.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(today, True)
     tomorrow = date.today() + timedelta(days=1)
+    trd = False
     if datetime.now().time() > time(HOURS, 0):
+        trd = True
         data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow,True)
     else:
         data_dict[tomorrow.strftime('%Y-%m-%d')] = Timeslot.objects.available_on_day(tomorrow)
@@ -59,7 +64,7 @@ def view2(request):
     timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
     timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
     return render(request, 'reserve.html',
-                  {'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots, 'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
+                  {'after_time':trd, 'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots, 'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict})
 
 
 @transaction.atomic
