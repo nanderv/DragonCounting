@@ -90,7 +90,7 @@ def name_str_to_id(name_str):
 
 class Reservation(models.Model):
     timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
-    name = models.CharField(max_length=16)
+    name = models.CharField(max_length=128)
     date = models.DateField()
 
     @staticmethod

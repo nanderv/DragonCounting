@@ -46,7 +46,7 @@ def passdecrypt(mykey, mypasswordencrypted):
 def my_encrypt(name):
     letters = string.ascii_lowercase
 
-    strr = (''.join(random.choice(letters) for i in range(10))+"|"+str(time.time()) + "|" + settings.CROSS_LOGIN_SECRET + "|" + name).encode()
+    strr = (''.join(random.choice(letters) for i in range(10)) + "|" + str(time.time()) + "|" + settings.CROSS_LOGIN_SECRET + "|" + name).encode()
     return passencrypt(settings.CROSS_LOGIN_KEY, strr)
 
 
