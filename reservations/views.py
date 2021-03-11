@@ -16,7 +16,7 @@ def get_my_res(name):
     ress = Reservation.objects.all()
     my_list = []
     for res in ress:
-        if res.get_id() == name_str_to_id(name) and res.get_id() != "":
+        if res.get_id() == name_str_to_id(name or "") and res.get_id() != "":
             my_list.append(res)
     return my_list
 
@@ -56,7 +56,7 @@ def view(request):
     timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
     timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
     name = request.session.get("name")
-    nm = name
+    nm = name or ""
     id = None
 
     if "@@" in nm:
