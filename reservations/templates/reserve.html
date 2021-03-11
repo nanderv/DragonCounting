@@ -1,53 +1,53 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Reserve for Bellettrie{% endblock %}
+{% block title %}Register for Bellettrie{% endblock %}
 {% block content %}
-    Due to government regulations, we have to work with reservations. If you want to visit Bellettrie during opening
-    hours, you'll have to reserve. At the moment, we're only open for picking up books and returning them. If you have a
+    Due to government regulations, visitors of Bellettrie need to register beforehand. If you want to visit Bellettrie during opening
+    hours, you'll have to register. At the moment, we're only open for picking up books and returning them. If you have a
     specific situation, please contact the board.
     <a href="https://www.bellettrie.utwente.nl/pages/basic/reservations">this page</a> on the main website.
-
+{##}
     <div class="row">
-        <div class="card col-md-12  col-lg-6">
+{#        <div class="card col-md-12  col-lg-6">#}
+{#            <div class="card-body">#}
+{#                <h5 class="card-title">How busy are Today's timeslots?</h5>#}
+{#                <p class="card-text">#}
+{#                <table>#}
+{#                    <tr>#}
+{#                        <th>Timeslot Name</th>#}
+{#                        <th>In Use</th>#}
+{#                        <th>Capacity</th>#}
+{#                    </tr>#}
+{#                    {% for timeslot in timeslots %}#}
+{#                        {% if timeslot.is_on_today %}#}
+{#                            {% if timeslot.get_len_res == timeslot.capacity %}#}
+{#                                <tr>#}
+{#                                    <td>{{ timeslot.name }}</td>#}
+{#                                    <td colspan="2">FULL</td>#}
+{#                                </tr>#}
+{#                            {% else %}#}
+{#                                <tr>#}
+{#                                    <td>{{ timeslot.name }}</td>#}
+{#                                    <td>{{ timeslot.get_len_res }}</td>#}
+{#                                    <td>{{ timeslot.capacity }}</td>#}
+{#                                </tr>#}
+{#                            {% endif %}#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </table>#}
+{#                </p>#}
+{##}
+{##}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="card col-md-12  col-lg-12">
             <div class="card-body">
-                <h5 class="card-title">How busy are Today's timeslots?</h5>
-                <p class="card-text">
-                <table>
-                    <tr>
-                        <th>Timeslot Name</th>
-                        <th>In Use</th>
-                        <th>Capacity</th>
-                    </tr>
-                    {% for timeslot in timeslots %}
-                        {% if timeslot.is_on_today %}
-                            {% if timeslot.get_len_res == timeslot.capacity %}
-                                <tr>
-                                    <td>{{ timeslot.name }}</td>
-                                    <td colspan="2">FULL</td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td>{{ timeslot.name }}</td>
-                                    <td>{{ timeslot.get_len_res }}</td>
-                                    <td>{{ timeslot.capacity }}</td>
-                                </tr>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </table>
-                </p>
-
-
-            </div>
-        </div>
-
-        <div class="card col-md-12  col-lg-6">
-            <div class="card-body">
-                <h5 class="card-title">Reservations</h5>
+                <h5 class="card-title">Registrations</h5>
                 {% if instance %}
-                    <h6 class="card-subtitle mb-2 text-muted">Reservation succesful!</h6>
-                    <a href="{% url 'reserve' %}" class="card-link">Reserve another</a>
+                    <h6 class="card-subtitle mb-2 text-muted">Registration succesful!</h6>
+                    <a href="{% url 'reserve' %}" class="card-link">Register another visit</a>
                     {% if instance != True %}
                         <head>
                             <meta http-equiv="refresh" content="0;url={% url 'reserved' %}">
@@ -58,21 +58,29 @@
                     <p class="card-text">
                         Fill in your name and when you want to visit. Each timeslot has a limited capacity; if it's full,
                         please
-                        select another one. For reserving, the following rules apply:<br>
+                        select another one. For registering, the following rules apply:<br>
                     <ul>
-                        <li>Reservations open two days before a day</li>
-                        <li>Reservations close on the day before, at 16:00</li>
-                        <li>Reservations stay open if a timeslot isn't full yet, but isn't empty either.</li>
+                        <li>The timeslots open two days before a day</li>
+                        <li>Timeslots close on the day before, at 16:00</li>
+                        <li>Timeslots stay open if a timeslot isn't full yet, but isn't empty either.</li>
                     </ul>
                     The last rule is there, because we don't want our openers to have to keep the room open if nobody wants to
                     visit. <br>
-                    Observe that on the day itself, it's possible to reserve for all timeslots on the day, even ones that
+                    Observe that on the day itself, it's possible to register for all timeslots on the day, even ones that
                     already
-                    took place. Therefore, it's meaningless to reserve for 13:00-13:30 if it's 14:00.
+                    took place.
                     <form method="post" action='#'>
                         {% csrf_token %}
                         <table>
-                            {{ form.as_table }}
+                            {% if name %}
+                                <tr><td>Name</td><td>{{ name }}<input type="hidden" id="name" name="name" value="{{ name }}"> <a href="{% url 'logoutTemp' %}">logout</a></td></tr>
+
+                                {% else %}
+                            <tr><td>Name</td><td>{{ form.name }}</td></tr>
+                                {% endif %}
+                            <tr><td>Date</td><td>{{ form.date }}</td></tr>
+                            <tr><td>Timeslot</td><td>{{ form.timeslot }}</td></tr>
+
 
                         </table>
                         <script>
@@ -108,7 +116,7 @@
     </div>
 
     {% if perms.reservations.change_reservation %}
-        <h3>Reservations</h3>
+        <h3>Registrations</h3>
         {% for timeslot in timeslots %}
             {% if timeslot.is_on_today %}
                 <h4>{{ timeslot.name }}</h4>
@@ -156,18 +164,17 @@
             {% empty %}
                 {% if after_time %}
                     <tr>
-                        <td>No reservations for this day; no opener needs to be present</td>
+                        <td>No registrations for this day; no opener needs to be present</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td>No reservations for this day yet, but someone can still reserve.</td>
+                        <td>No registrations for this day yet, but someone can still reserve.</td>
                     </tr>
                 {% endif %}
 
 
             {% endfor %}
         </table>
-        </p>
 
 
         <h5 class="card-title">When do we need to open overmorrow?</h5>
@@ -185,20 +192,19 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td>No reservations for this timeslot yet, but someone can still reserve.</td>
+                    <td>No registrations for this timeslot yet, but someone can still reserve.</td>
                 </tr>
             {% endfor %}
         </table>
-        </p>
 
     {% endif %}
     <h3>Privacy:</h3>
-    This data will be visible to people who can open the room, during the day for which the reservation was made.<br/>
+    This data will be visible to people who can open the room, during the day for which the registration was made.<br/>
     The fact that
-    <i>somebody</i> reserved is visible to all openers from the moment of the reservation, until the reservation is removed
+    <i>somebody</i> registered a visit is visible to all openers from the moment of the registration, until the registration is removed
     from the system.
     <br/>
-    The data submitted here will be stored for less than forty-eight hours after the end of the reservation.<br/>
+    The data submitted here will be stored for less than forty-eight hours after the end of the timeslot for which the registration was made.<br/>
     Besides this, our web committee has access to the data, in case of technical issues. The web committee also cannot access
-    the data beyond forty-eight hours after the end of the reservation.
+    the data beyond forty-eight hours after the end of the timeslot.
 {% endblock %}
