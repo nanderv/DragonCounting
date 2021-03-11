@@ -1,12 +1,14 @@
+import string
 import time
 from datetime import datetime
 
 from django.conf import settings
 from simplecrypt import encrypt, decrypt
-
+import random
 
 import sys
 from cryptography.fernet import Fernet
+
 
 # Generate encryption key
 def passkey():
@@ -42,11 +44,11 @@ def passdecrypt(mykey, mypasswordencrypted):
 
 
 def my_encrypt(name):
-    strr = (settings.CROSS_LOGIN_SECRET + "|"+str(time.time()) + "|"+name).encode()
+    letters = string.ascii_lowercase
+
+    strr = (''.join(random.choice(letters) for i in range(10))+"|"+str(time.time()) + "|" + settings.CROSS_LOGIN_SECRET + "|" + name).encode()
     return passencrypt(settings.CROSS_LOGIN_KEY, strr)
 
 
 def my_decrypt(data):
     return passdecrypt(settings.CROSS_LOGIN_KEY, data)
-
-

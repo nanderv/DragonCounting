@@ -15,7 +15,7 @@ def temp_login(request):
     token = request.GET.get('token')
     tt = my_decrypt(token).split('|')
     zz = time.time() - float(tt[1])
-    if zz < 0 or zz > settings.CROSS_LOGIN_TIMEOUT or tt[0] != settings.CROSS_LOGIN_SECRET:
+    if zz < 0 or zz > settings.CROSS_LOGIN_TIMEOUT or tt[2] != settings.CROSS_LOGIN_SECRET:
         return HttpResponse("Token no longer valid")
-    request.session['name'] = "@@"+tt[2];
+    request.session['name'] = tt[3];
     return redirect('reserve')

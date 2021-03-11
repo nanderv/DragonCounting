@@ -14,6 +14,6 @@ class Command(BaseCommand):
     help = 'Set the traffic light'
 
     def handle(self, *args, **options):
-        d = my_encrypt("test")
+        d = my_encrypt("test@@141")
         print(d)
         print(my_decrypt(d))

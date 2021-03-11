@@ -77,6 +77,17 @@ class TimeslotOption(models.Model):
         return self.name
 
 
+def name_str_to_name(name_str):
+    return name_str.split("@@")[0]
+
+
+def name_str_to_id(name_str):
+    if len(name_str.split("@@")) > 1:
+        return name_str.split("@@")[1]
+    else:
+        return ""
+
+
 class Reservation(models.Model):
     timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
     name = models.CharField(max_length=16)
@@ -92,6 +103,12 @@ class Reservation(models.Model):
 
     def get_options(self):
         return TimeslotOptionValue.objects.filter(reservation=self).order_by('timeslot_option__name')
+
+    def get_name(self):
+        return name_str_to_name(self.name)
+
+    def get_id(self):
+        return name_str_to_id(self.name)
 
 
 class TimeslotOptionValue(models.Model):

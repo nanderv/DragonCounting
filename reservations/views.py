@@ -6,13 +6,23 @@ from django.db import transaction
 
 # Create your views here.
 from reservations.forms import EditForm
-from reservations.models import Reservation, Timeslot, TimeslotOption, TimeslotOptionValue
+from reservations.models import Reservation, Timeslot, TimeslotOption, TimeslotOptionValue, name_str_to_name, name_str_to_id
 from django.conf import settings
 
 HOURS = 15
 
 
+def get_my_res(name):
+    ress = Reservation.objects.all()
+    my_list = []
+    for res in ress:
+        if res.get_id() == name_str_to_id(name) and res.get_id() != "":
+            my_list.append(res)
+    return my_list
+
+
 def view(request):
+    my_res = get_my_res(request.session.get("name", ""))
     Reservation.wipe()
     instance = None
     form = EditForm()
@@ -45,14 +55,21 @@ def view(request):
     timeslots = Timeslot.objects.available_on_day(only_non_empty=True)
     timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
     timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
-    nm = request.session.get("name")
-    if nm:
-        nm = nm.replace("@@", "")
-    return render(request, 'reserve.html', {'after_time': trd, 'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
-                                            'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict, 'name': nm})
+    name = request.session.get("name")
+    nm = name
+    id = None
+
+    if "@@" in nm:
+        nm = name.split("@@")[0]
+
+        if len(name.split("@@")) > 1:
+            id = name.split("@@")[1]
+    return render(request, 'reserve.html', {'my_registrations':my_res,'after_time': trd, 'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
+                                            'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw, 'tds': data_dict, 'name': nm, 'p_id': id})
 
 
 def view2(request):
+    my_res= get_my_res(request.session.get("name",""))
     Reservation.wipe()
     instance = None
     form = EditForm()
@@ -72,7 +89,7 @@ def view2(request):
     timeslots_tmrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=1), only_non_empty=True)
     timeslots_omrw = Timeslot.objects.available_on_day(day=date.today() + timedelta(days=2), only_non_empty=True)
     return render(request, 'reserve.html',
-                  {'after_time': trd, 'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots, 'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw,
+                  {'my_registrations':my_res,'after_time': trd, 'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots, 'timeslots_tmrw': timeslots_tmrw, 'timeslots_omrw': timeslots_omrw,
                    'tds': data_dict})
 
 
@@ -96,11 +113,22 @@ def options(request, id, date):
 
 def delete(request, id):
     reservation = Reservation.objects.get(pk=id)
+
+    if  not ( request.user.is_authenticated or (reservation.get_id() != "" and reservation.get_id() == name_str_to_id(request.session.get("name", "") or ""))):
+        print(request.user)
+
+        print(request.session.get("name", "") or "")
+        print(reservation.get_id())
+        return HttpResponse("ERROR")
+    print(request.user.is_authenticated)
+    print(request.session.get("name", "") or "")
+    print(reservation.get_id())
     if not request.GET.get('confirm'):
         return render(request, 'are-you-sure.html', {'what': "delete reservation with name " + reservation.name + " for " + reservation.timeslot.name})
     reservation.delete()
     return redirect('reserve')
 
+
 def logout(request):
-    request.session['name']=None
+    request.session['name'] = None
     return redirect('reserve')
