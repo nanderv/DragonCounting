@@ -91,6 +91,7 @@ def name_str_to_id(name_str):
 class Reservation(models.Model):
     timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
     name = models.CharField(max_length=128)
+    my_id = models.IntegerField(null=True, blank=True)
     date = models.DateField()
 
     @staticmethod
@@ -108,7 +109,7 @@ class Reservation(models.Model):
         return name_str_to_name(self.name)
 
     def get_id(self):
-        return name_str_to_id(self.name)
+        return self.my_id
 
 
 class TimeslotOptionValue(models.Model):

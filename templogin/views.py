@@ -7,15 +7,20 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from bellettrie_library_system.cross_login import my_decrypt
-from templogin.models import TempUrl
 from django.conf import settings
+
+from templogin.models import CrossLogin
 
 
 def temp_login(request):
     token = request.GET.get('token')
-    tt = my_decrypt(token).split('|')
-    zz = time.time() - float(tt[1])
-    if zz < 0 or zz > settings.CROSS_LOGIN_TIMEOUT or tt[2] != settings.CROSS_LOGIN_SECRET:
-        return HttpResponse("Token no longer valid")
-    request.session['name'] = tt[3];
+    tt = my_decrypt(token)
+
+    request.session['name'] = tt.name
+    request.session['my_id'] = tt.id
+    print(tt.perm_level)
+    print(CrossLogin.objects.filter(perms_level=tt.perm_level))
+    for c in CrossLogin.objects.filter(perms_level=tt.perm_level):
+        print(c)
+        login(request, c.user)
     return redirect('reserve')

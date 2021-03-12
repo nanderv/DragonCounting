@@ -22,7 +22,7 @@ def view(request):
     if len(light) == 1:
         open = light[0].open
     return render(request, 'crowd_view.html',
-                  {'crowd': crowd, 'open': open, 'max': settings.MAX_CROWD, 'full': crowd >= settings.MAX_CROWD})
+                  {'crowd': crowd, 'open': open, 'max': settings.MAX_CROWD, 'full': crowd >= settings.MAX_CROWD,'name':request.session.get("name", "")})
 
 
 def crowd_api(request):
