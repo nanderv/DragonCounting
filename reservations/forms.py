@@ -1,18 +1,33 @@
-from datetime import datetime, timedelta
+from datetime import date, timedelta, datetime, time
 
 from django.forms import ModelForm, Select, forms, ChoiceField
 
 from reservations.models import Reservation, Timeslot
 
+HOURS = 15
+
 
 def today_options():
-    return (
-        (
-            datetime.now().date(), "Today: " + str(datetime.now().date().isoformat())
-        ),
-        ((datetime.now() + timedelta(days=1)).date(), "Tomorrow: " + str((datetime.now() + timedelta(days=1)).date().isoformat())),
-        ((datetime.now() + timedelta(days=2)).date(), "Overmorrow: " + str((datetime.now() + timedelta(days=2)).date().isoformat())),
-    )
+    today = datetime.now().date()
+    res = ()
+    if len(Timeslot.objects.available_on_day(today, True)) > 0:
+        print("BRRRRRR")
+        res = res + ((
+                         datetime.now().date(), "Today: " + str(datetime.now().date().isoformat()))
+        ,)
+
+    z = Timeslot.objects.available_on_day(
+        (datetime.now() + timedelta(days=1)).date(),
+        datetime.now().time() > time(HOURS, 0))
+    if len(z) > 0:
+        res = res + ((((datetime.now() + timedelta(days=1)).date(),
+                       "Tomorrow: " + str((datetime.now() + timedelta(days=1)).date().isoformat()))),)
+    if len(Timeslot.objects.available_on_day(
+            (datetime.now() + timedelta(days=2)).date(), False)) > 0:
+        res = res + ((((datetime.now() + timedelta(days=2)).date(),
+                       "Overmorrow: " + str(
+                           (datetime.now() + timedelta(days=2)).date().isoformat()))),)
+    return res
 
 
 class EditForm(ModelForm):

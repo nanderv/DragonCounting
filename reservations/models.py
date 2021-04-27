@@ -1,16 +1,9 @@
 from django.db import models
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 # Create your models here.
 from django.db.models import CASCADE
 from django.utils.functional import lazy
-
-
-def get_slots_is_open(slot_name, date_to_measure: date):
-    if slot_name == 'afternoon' or slot_name == 'evening':
-        return date_to_measure.isoweekday() < 6
-    if slot_name == 'writing':
-        return date_to_measure.isoweekday() == 3
 
 
 class TimeslotManager(models.Manager):
@@ -33,16 +26,29 @@ class TimeslotManager(models.Manager):
         iso_day = str(dt.isoweekday())
         return self.model.objects.filter(on_day__contains=iso_day).exclude(pk__in=excl)
 
-    def available_on_day(self, day=None, only_non_empty=False):
+    def available_on_day(self, day=None, only_non_empty=False, also_before=False):
         if day is None:
             day = date.today()
 
+            print("TD")
         tss = self.only_current(day)
+        tsz = tss
+        if day == date.today():
+            tsz = []
+            for t in tss:
+                print(datetime.now().time())
+                print(t.ending_time)
+                print(datetime.now().time() < t.ending_time)
+                if datetime.now().time() < t.ending_time or also_before:
+                    tsz.append(t)
+        print(tsz)
+        tss = tsz
         if not only_non_empty:
             return tss
         result = []
         for ts in tss:
             if len(Reservation.objects.filter(date=day, timeslot=ts)) > 0:
+                print(ts)
                 result.append(ts.pk)
         return self.model.objects.filter(pk__in=result)
 
@@ -52,9 +58,18 @@ class Timeslot(models.Model):
     on_day = models.CharField(max_length=7)
     capacity = models.IntegerField()
     objects = TimeslotManager()
+    starting_time = models.TimeField(null=True)
+    ending_time = models.TimeField(null=True)
+
+    def is_on_days_future(self, d):
+        print(d, (date.today()+timedelta(days=d)).isoweekday())
+        return str((date.today()+timedelta(days=d)).isoweekday()) in self.on_day
 
     def is_on_today(self):
         return str(date.today().isoweekday()) in self.on_day
+
+    def get_reservations_future(self, d):
+        return Reservation.objects.filter(timeslot=self, date=date.today()+timedelta(days=d))
 
     def get_reservations(self):
         return Reservation.objects.filter(timeslot=self, date=date.today())

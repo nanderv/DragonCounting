@@ -1,0 +1,25 @@
+{% if nope %}<i>No reservations for this timeslot</i>
+{% else %}
+    <table>
+        <tr>
+            <th>Name</th>
+            {% for option in options %}
+                <th>{{ option.name }}</th>
+            {% endfor %}
+            <td>Yeet</td>
+        </tr>
+        {% for reservation in reservations %}
+            <tr>
+                <td>{% if reservation.get_id %}
+                    <a href="https://bellettrie.utwente.nl/members/{{ reservation.get_id }}">{{ reservation.get_name }}</a>{% else %}
+                    {{ reservation.get_name }}{% endif %}</td>
+                {% for option in reservation.get_options %}
+                    <td>{% if option.value %}yes{% else %} no{% endif %}</td>
+                {% endfor %}
+                <td><a href="{% url 'deleted' reservation.pk %}">Yeet</a></td>
+
+            </tr>
+        {% empty %}
+            No Reservations for this timeslot; no opener needs to be present.
+        {% endfor %}
+    </table>{% endif %}
