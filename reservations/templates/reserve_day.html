@@ -1,0 +1,13 @@
+{% load futures %}
+<div class="card col-sm-12  col-md-12 col-xl-4">
+    <div class="card-body">
+
+        <h3>{% day_nr day %}</h3>
+        {% for timeslot in tss %}
+            <h4>{{ timeslot.name }}</h4>
+            {% get_reservations timeslot day %}
+        {% empty %}
+            No timeslots require opening today
+        {% endfor %}
+    </div>
+</div>

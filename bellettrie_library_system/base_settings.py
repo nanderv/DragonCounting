@@ -28,8 +28,8 @@ DEBUG = False
 ALLOWED_HOSTS = ["localhost", "nander.net", "127.0.0.1"]
 
 # Application definition
-MAX_CROWD = 5
-MAX_RESERVE = 5
+MAX_CROWD = 7
+MAX_RESERVE = 7
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,7 +65,8 @@ TEMPLATES = [
         'OPTIONS': {
             'builtins':
                 [
-                    'bellettrie_library_system.templatetags.paginator_tag'
+                    'bellettrie_library_system.templatetags.paginator_tag',
+                    'reservations.templatetags.futures'
                 ],
             'context_processors':
                 [
@@ -101,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Amsterdam'
 
 USE_I18N = True
 
