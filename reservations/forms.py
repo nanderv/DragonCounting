@@ -11,7 +11,6 @@ def today_options():
     today = datetime.now().date()
     res = ()
     if len(Timeslot.objects.available_on_day(today, True)) > 0:
-        print("BRRRRRR")
         res = res + ((
                          datetime.now().date(), "Today: " + str(datetime.now().date().isoformat()))
         ,)
