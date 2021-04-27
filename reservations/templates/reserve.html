@@ -32,10 +32,9 @@
                         <li>Timeslots close on the day before, at 16:00</li>
                         <li>Timeslots might stay open longer in certain cases.</li>
                         <li>Timeslots stay open if a timeslot isn't full yet, but isn't empty either.</li>
+                        <li>Regardless of the rules above, timeslots close 30 minutes before the end of these timeslots.</li>
                     </ul>
-                    The last rule is there, because we don't want our openers to have to keep the room open if nobody wants to
-                    visit. <br>
-                    It is possible to reserve for a timeslot until 30 minutes before the end of this timeslot.
+                    Timeslots generally close early, because during the lockdown not many people show up. Therefore, we want to prevent our volunteers from having to go to campus twice per day if nobody intends to show up.<br>
                     <form method="post" action='#'>
                         {% csrf_token %}
                         <table>
