@@ -33,3 +33,11 @@ def day_nr(day):
     if day == 2:
         return "Overmorrow"
     return day
+
+
+@register.inclusion_tag('forced_open_ts.html')
+def forced_open(timeslot, day):
+    z = 1
+    if timeslot.is_forced_open(day):
+        z =0
+    return {'timeslot': timeslot, 'day': day, 'should_open': z }

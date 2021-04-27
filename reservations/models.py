@@ -47,8 +47,7 @@ class TimeslotManager(models.Manager):
             return tss
         result = []
         for ts in tss:
-            if len(Reservation.objects.filter(date=day, timeslot=ts)) > 0:
-                print(ts)
+            if len(Reservation.objects.filter(date=day, timeslot=ts)) > 0 or ts.is_forced_open_date(day):
                 result.append(ts.pk)
         return self.model.objects.filter(pk__in=result)
 
@@ -83,6 +82,15 @@ class Timeslot(models.Model):
     def get_options(self):
         return TimeslotOption.objects.filter(timeslot=self).order_by('name')
 
+    def is_forced_open(self, days=0):
+        date = datetime.today() + timedelta(days=days)
+
+        return len(ForceOpen.objects.filter(timeslot=self,date=date))>0
+    def is_forced_open_date(self, date):
+
+
+        return len(ForceOpen.objects.filter(timeslot=self,date=date))>0
+
 
 class TimeslotOption(models.Model):
     name = models.CharField(max_length=32)
@@ -113,6 +121,8 @@ class Reservation(models.Model):
     def wipe():
         lst = Reservation.objects.filter(date__lt=date.today() - timedelta(days=1))
         lst.delete()
+        lst = ForceOpen.objects.filter(date__lt=date.today() - timedelta(days=1))
+        lst.delete()
 
     def __str__(self):
         return str(self.date) + "::" + str(self.timeslot) + " : " + self.name
@@ -131,3 +141,8 @@ class TimeslotOptionValue(models.Model):
     timeslot_option = models.ForeignKey(TimeslotOption, on_delete=CASCADE)
     value = models.BooleanField()
     reservation = models.ForeignKey(Reservation, on_delete=CASCADE)
+
+
+class ForceOpen(models.Model):
+    timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
+    date = models.DateField()

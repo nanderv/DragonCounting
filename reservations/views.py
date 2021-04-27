@@ -1,12 +1,14 @@
 from datetime import date, timedelta, datetime, time
 
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import transaction
 
 # Create your views here.
 from reservations.forms import EditForm
-from reservations.models import Reservation, Timeslot, TimeslotOption, TimeslotOptionValue, name_str_to_name, name_str_to_id
+from reservations.models import Reservation, Timeslot, TimeslotOption, TimeslotOptionValue, name_str_to_name, name_str_to_id, \
+    ForceOpen
 from django.conf import settings
 
 HOURS = 15
@@ -62,8 +64,9 @@ def view(request):
 
         if len(name.split("@@")) > 1:
             id = name.split("@@")[1]
-    return render(request, 'reserve.html', {'my_registrations': my_res, 'after_time': trd, 'form': form, 'instance': instance, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
-                                             'tds': data_dict, 'name': nm, 'p_id': id})
+    return render(request, 'reserve.html', {'my_registrations': my_res, 'after_time': trd, 'form': form, 'instance': instance,
+                                            'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
+                                            'tds': data_dict, 'name': nm, 'p_id': id})
 
 
 def view2(request):
@@ -86,8 +89,9 @@ def view2(request):
     timeslots = Timeslot.objects.all()
 
     return render(request, 'reserve.html',
-                  {'my_registrations': my_res, 'after_time': trd, 'form': form, 'instance': True, 'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
-                   'tds': data_dict,'name':request.session.get("name", "")})
+                  {'my_registrations': my_res, 'after_time': trd, 'form': form, 'instance': True,
+                   'maximum': settings.MAX_RESERVE, 'timeslots': timeslots,
+                   'tds': data_dict, 'name': request.session.get("name", "")})
 
 
 @transaction.atomic
@@ -101,22 +105,27 @@ def options(request, id, date):
         any_on = False
         for option in options:
             any_on = any_on or request.POST.get(str(option.pk), False) == "on"
-            TimeslotOptionValue.objects.create(timeslot_option=option, value=request.POST.get(str(option.pk), False) == "on", reservation=reservation)
+            TimeslotOptionValue.objects.create(timeslot_option=option, value=request.POST.get(str(option.pk), False) == "on",
+                                               reservation=reservation)
         if not any_on:
             reservation.delete()
-            return render(request, 'options.html', {'instance': True, 'timeslot': timeslot, 'options': options, 'warning': 'You can only visit Bellettrie for one of the reasons below.'})
+            return render(request, 'options.html', {'instance': True, 'timeslot': timeslot, 'options': options,
+                                                    'warning': 'You can only visit Bellettrie for one of the reasons below.'})
         return redirect('reserved')
-    return render(request, 'options.html', {'instance': True, 'timeslot': timeslot, 'options': options,'name':request.session.get("name", "")})
+    return render(request, 'options.html',
+                  {'instance': True, 'timeslot': timeslot, 'options': options, 'name': request.session.get("name", "")})
 
 
 def delete(request, id):
     reservation = Reservation.objects.get(pk=id)
 
-    if not (request.user.is_authenticated or (reservation.get_id() != "" and reservation.get_id() == name_str_to_id(request.session.get("name", "") or ""))):
+    if not (request.user.is_authenticated or (
+            reservation.get_id() != "" and reservation.get_id() == name_str_to_id(request.session.get("name", "") or ""))):
         return HttpResponse("ERROR")
 
     if not request.GET.get('confirm'):
-        return render(request, 'are-you-sure.html', {'what': "delete reservation with name " + reservation.name + " for " + reservation.timeslot.name})
+        return render(request, 'are-you-sure.html',
+                      {'what': "delete reservation with name " + reservation.name + " for " + reservation.timeslot.name})
     reservation.delete()
     return redirect('reserve')
 
@@ -125,3 +134,14 @@ def logout(request):
     request.session['name'] = None
     request.session['my_id'] = None
     return redirect('logout')
+
+
+@permission_required('perms.reservations.change_reservation')
+def force_timeslot_open(request, id, d, to_open):
+    ts = Timeslot.objects.get(pk=id)
+    date = datetime.today()+timedelta(days=d)
+    ForceOpen.objects.filter(timeslot=ts, date=date).delete()
+    if to_open:
+        print(ts, date)
+        ForceOpen.objects.create(timeslot=ts, date=date)
+    return redirect('reserve')

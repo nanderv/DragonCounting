@@ -3,10 +3,16 @@
     <div class="card-body">
 
         <h3>{% day_nr day %}</h3>
+
         {% for timeslot in tss %}
+
             <h4>{{ timeslot.name }}</h4>
+
+            {% forced_open timeslot day %}
+
             {% get_reservations timeslot day %}
         {% empty %}
+            <br>
             No timeslots require opening today
         {% endfor %}
     </div>
