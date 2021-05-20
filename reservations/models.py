@@ -27,6 +27,7 @@ class TimeslotManager(models.Manager):
         return self.model.objects.filter(on_day__contains=iso_day).exclude(pk__in=excl)
 
     def available_on_day(self, day=None, only_non_empty=False, also_before=False):
+        # return []
         if day is None:
             day = date.today()
 
@@ -59,6 +60,7 @@ class Timeslot(models.Model):
     objects = TimeslotManager()
     starting_time = models.TimeField(null=True)
     ending_time = models.TimeField(null=True)
+    always_open = models.BooleanField(default=False)
 
     def is_on_days_future(self, d):
         print(d, (date.today()+timedelta(days=d)).isoweekday())
@@ -85,11 +87,10 @@ class Timeslot(models.Model):
     def is_forced_open(self, days=0):
         date = datetime.today() + timedelta(days=days)
 
-        return len(ForceOpen.objects.filter(timeslot=self,date=date))>0
+        return  self.always_open or  len(ForceOpen.objects.filter(timeslot=self,date=date))>0
+
     def is_forced_open_date(self, date):
-
-
-        return len(ForceOpen.objects.filter(timeslot=self,date=date))>0
+        return  self.always_open or len(ForceOpen.objects.filter(timeslot=self,date=date))>0
 
 
 class TimeslotOption(models.Model):
