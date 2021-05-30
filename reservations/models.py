@@ -101,7 +101,7 @@ class TimeslotOption(models.Model):
     capacity = models.IntegerField(default=-1)
 
     def used_capacity(self):
-        return  len(self.timeslotoptionvalue_set.all())
+        return  len(self.timeslotoptionvalue_set.filter(value=True))
 
     def __str__(self):
         return self.name
