@@ -18,9 +18,26 @@
         {% csrf_token %}
         <table>
             {% for option in options %}
-            <tr><td><label for="{{ option.pk }}">{{ option.name }}</label></td><td> <input type="checkbox" id="{{ option.id }}" name="{{ option.id }}"></td></tr>
+                {% if option.capacity >= 0 %}
+                    {% if option.used_capacity < option.capacity %}
+                    <tr><td><label for="{{ option.pk }}">{{ option.name }}</label></td><td> <input type="radio" id="{{ option.id }}" name="{{ option.id }}"> ( {{ option.used_capacity }} / {{ option.capacity }} )</td></tr>
+                        {% else  %}
+                        <tr><td><label for="{{ option.pk }}">{{ option.name }}</label></td><td> <input disabled type="radio" id="{{ option.id }}" name="{{ option.id }}"> ( FULL  )</td></tr>
+                        {% endif %}
+                    {% else %}
+            <tr><td><label for="{{ option.pk }}">{{ option.name }}</label></td><td> <input type="radio" id="{{ option.id }}" name="{{ option.id }}"></td></tr>
+                {% endif %}
             {% endfor %}
         </table>
+        <script>
+            $(document).ready(function () {
+    $('input[type=radio]').change(function() {
+        // When any radio button on the page is selected,
+        // then deselect all other radio buttons.
+               $('input[type=radio]:checked').not(this).prop('checked', false);
+    });
+});
+        </script>
 
         <button type="submit" class="btn btn-primary">Save</button>
         </form>

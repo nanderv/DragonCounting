@@ -58,6 +58,7 @@ def view(request):
     name = request.session.get("name")
     nm = name or ""
     id = None
+    print("III")
 
     if "@@" in nm:
         nm = name.split("@@")[0]
@@ -107,10 +108,10 @@ def options(request, id, date):
             any_on = any_on or request.POST.get(str(option.pk), False) == "on"
             TimeslotOptionValue.objects.create(timeslot_option=option, value=request.POST.get(str(option.pk), False) == "on",
                                                reservation=reservation)
-        if not any_on:
+        if not any_on and len(options)>0:
             reservation.delete()
             return render(request, 'options.html', {'instance': True, 'timeslot': timeslot, 'options': options,
-                                                    'warning': 'You can only visit Bellettrie for one of the reasons below.'})
+                                                    'warning': 'You need to select an option below. If none are available, then the activity is full.'})
         return redirect('reserved')
     return render(request, 'options.html',
                   {'instance': True, 'timeslot': timeslot, 'options': options, 'name': request.session.get("name", "")})

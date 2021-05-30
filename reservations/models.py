@@ -8,6 +8,7 @@ from django.utils.functional import lazy
 
 class TimeslotManager(models.Manager):
     def only_current(self, dt=None):
+
         if dt is None:
             dt = date.today()
         reservations = Reservation.objects.filter(date=dt)
@@ -96,6 +97,11 @@ class Timeslot(models.Model):
 class TimeslotOption(models.Model):
     name = models.CharField(max_length=32)
     timeslot = models.ForeignKey(Timeslot, on_delete=CASCADE)
+    only_one = models.BooleanField(default=False)
+    capacity = models.IntegerField(default=-1)
+
+    def used_capacity(self):
+        return  len(self.timeslotoptionvalue_set.all())
 
     def __str__(self):
         return self.name
