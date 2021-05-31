@@ -32,18 +32,14 @@ class TimeslotManager(models.Manager):
         if day is None:
             day = date.today()
 
-            print("TD")
         tss = self.only_current(day)
         tsz = tss
         if day == date.today():
             tsz = []
             for t in tss:
-                print(datetime.now().time())
-                print(t.ending_time)
-                print(datetime.now().time() < t.ending_time)
+
                 if datetime.now().time() < t.ending_time or also_before:
                     tsz.append(t)
-        print(tsz)
         tss = tsz
         if not only_non_empty:
             return tss
@@ -64,7 +60,6 @@ class Timeslot(models.Model):
     always_open = models.BooleanField(default=False)
 
     def is_on_days_future(self, d):
-        print(d, (date.today()+timedelta(days=d)).isoweekday())
         return str((date.today()+timedelta(days=d)).isoweekday()) in self.on_day
 
     def is_on_today(self):

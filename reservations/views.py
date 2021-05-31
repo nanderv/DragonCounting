@@ -58,7 +58,6 @@ def view(request):
     name = request.session.get("name")
     nm = name or ""
     id = None
-    print("III")
 
     if "@@" in nm:
         nm = name.split("@@")[0]
@@ -143,6 +142,5 @@ def force_timeslot_open(request, id, d, to_open):
     date = datetime.today()+timedelta(days=d)
     ForceOpen.objects.filter(timeslot=ts, date=date).delete()
     if to_open:
-        print(ts, date)
         ForceOpen.objects.create(timeslot=ts, date=date)
     return redirect('reserve')
