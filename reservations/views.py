@@ -107,7 +107,7 @@ def options(request, id, date):
             any_on = any_on or request.POST.get(str(option.pk), False) == "on"
             TimeslotOptionValue.objects.create(timeslot_option=option, value=request.POST.get(str(option.pk), False) == "on",
                                                reservation=reservation)
-        if not any_on and len(options)>0:
+        if not any_on and len(options) > 0:
             reservation.delete()
             return render(request, 'options.html', {'instance': True, 'timeslot': timeslot, 'options': options,
                                                     'warning': 'You need to select an option below. If none are available, then the activity is full.'})
@@ -130,6 +130,17 @@ def delete(request, id):
     return redirect('reserve')
 
 
+def arrive(request, id):
+    reservation = Reservation.objects.get(pk=id)
+
+    if not (request.user.is_authenticated or (
+            reservation.get_id() != "" and reservation.get_id() == name_str_to_id(request.session.get("name", "") or ""))):
+        return HttpResponse("ERROR")
+    reservation.arrived = True
+    reservation.save()
+    return redirect('reserve')
+
+
 def logout(request):
     request.session['name'] = None
     request.session['my_id'] = None
@@ -139,7 +150,7 @@ def logout(request):
 @permission_required('perms.reservations.change_reservation')
 def force_timeslot_open(request, id, d, to_open):
     ts = Timeslot.objects.get(pk=id)
-    date = datetime.today()+timedelta(days=d)
+    date = datetime.today() + timedelta(days=d)
     ForceOpen.objects.filter(timeslot=ts, date=date).delete()
     if to_open:
         ForceOpen.objects.create(timeslot=ts, date=date)

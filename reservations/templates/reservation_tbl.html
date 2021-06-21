@@ -16,6 +16,9 @@
                 {% for option in reservation.get_options %}
                     <td>{% if option.value %}yes{% else %} no{% endif %}</td>
                 {% endfor %}
+                {% if not reservation.arrived %}<td><a href="{% url 'arrived' reservation.pk %}">Has not arrived</a></td>{% else %}
+                <td>Has arrived</td>
+                {% endif %}
                 <td><a href="{% url 'deleted' reservation.pk %}">Yeet</a></td>
 
             </tr>

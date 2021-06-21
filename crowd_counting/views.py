@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from crowd_counting.models import CrowdStatus
+from reservations.models import Timeslot
 from traffic_light.models import TrafficLightStatus
 from django.conf import settings
 
@@ -22,7 +23,8 @@ def view(request):
     if len(light) == 1:
         open = light[0].open
     return render(request, 'crowd_view.html',
-                  {'crowd': crowd, 'open': open, 'max': settings.MAX_CROWD, 'full': crowd >= settings.MAX_CROWD,'name':request.session.get("name", "")})
+                  {'crowd': crowd, 'open': open, 'max': settings.MAX_CROWD, 'full': crowd >= settings.MAX_CROWD,
+                   'name': request.session.get("name", "")})
 
 
 def crowd_api(request):
@@ -34,7 +36,10 @@ def crowd_api(request):
     open = False
     if len(light) == 1:
         open = light[0].open
-    return HttpResponse(str(crowd)+","+str(settings.MAX_CROWD)+","+ str(open))
+    count = 0
+    for t in Timeslot.objects.all():
+        count += (t.get_timeslot_number_people_now())
+    return HttpResponse(str(crowd) + "," + str(settings.MAX_CROWD) + "," + str(open) + "," + str(settings.MAX_CROWD - count))
 
 
 def diff(request, delta):

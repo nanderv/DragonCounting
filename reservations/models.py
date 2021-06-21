@@ -38,7 +38,7 @@ class TimeslotManager(models.Manager):
             tsz = []
             for t in tss:
 
-                if datetime.now().time() < t.ending_time or also_before:
+                if datetime.now().time() < t.starting_time or also_before:
                     tsz.append(t)
         tss = tsz
         if not only_non_empty:
@@ -60,13 +60,13 @@ class Timeslot(models.Model):
     always_open = models.BooleanField(default=False)
 
     def is_on_days_future(self, d):
-        return str((date.today()+timedelta(days=d)).isoweekday()) in self.on_day
+        return str((date.today() + timedelta(days=d)).isoweekday()) in self.on_day
 
     def is_on_today(self):
         return str(date.today().isoweekday()) in self.on_day
 
     def get_reservations_future(self, d):
-        return Reservation.objects.filter(timeslot=self, date=date.today()+timedelta(days=d))
+        return Reservation.objects.filter(timeslot=self, date=date.today() + timedelta(days=d))
 
     def get_reservations(self):
         return Reservation.objects.filter(timeslot=self, date=date.today())
@@ -83,10 +83,20 @@ class Timeslot(models.Model):
     def is_forced_open(self, days=0):
         date = datetime.today() + timedelta(days=days)
 
-        return  self.always_open or  len(ForceOpen.objects.filter(timeslot=self,date=date))>0
+        return self.always_open or len(ForceOpen.objects.filter(timeslot=self, date=date)) > 0
 
     def is_forced_open_date(self, date):
-        return  self.always_open or len(ForceOpen.objects.filter(timeslot=self,date=date))>0
+        return self.always_open or len(ForceOpen.objects.filter(timeslot=self, date=date)) > 0
+
+    def get_timeslot_number_people_now(self):
+        if not str(date.today().isoweekday()) in self.on_day:
+            return 0
+        if not (self.starting_time <= datetime.now().time() <= self.ending_time):
+            return 0
+        if self.starting_time <= (datetime.now() - timedelta(minutes=30)).time():
+            return 0
+        print("D")
+        return len(Reservation.objects.filter(timeslot=self, date=date.today(), arrived=False))
 
 
 class TimeslotOption(models.Model):
@@ -96,7 +106,7 @@ class TimeslotOption(models.Model):
     capacity = models.IntegerField(default=-1)
 
     def used_capacity(self):
-        return  len(self.timeslotoptionvalue_set.filter(value=True))
+        return len(self.timeslotoptionvalue_set.filter(value=True))
 
     def __str__(self):
         return self.name
@@ -118,6 +128,7 @@ class Reservation(models.Model):
     name = models.CharField(max_length=128)
     my_id = models.IntegerField(null=True, blank=True)
     date = models.DateField()
+    arrived = models.BooleanField(default=False)
 
     @staticmethod
     def wipe():
