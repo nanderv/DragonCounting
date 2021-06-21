@@ -36,7 +36,7 @@
                             The room is full :(
                         {% else %}
                             <img style="width:100px;" src="{% static 'images/light/green.png' %}"><br/>
-                            The room has {{ crowd }} people in the room, out of a maximum {{ max }}.{% if reserved_count >0 %} <br>
+                            The room has {{ crowd }} people in the room, out of a maximum {{ max }}.{% if reserved_count > 0 %} <br>
                         There are still {{ reserved_count }} people who have reserved for right now.
                     {% endif %}
                         {% endif %}
