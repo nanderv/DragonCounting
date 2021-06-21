@@ -22,9 +22,12 @@ def view(request):
     open = False
     if len(light) == 1:
         open = light[0].open
+    reserved = 0
+    for t in Timeslot.objects.all():
+        reserved += (t.get_timeslot_number_people_now())
     return render(request, 'crowd_view.html',
                   {'crowd': crowd, 'open': open, 'max': settings.MAX_CROWD, 'full': crowd >= settings.MAX_CROWD,
-                   'name': request.session.get("name", "")})
+                   'name': request.session.get("name", ""), 'reserved_count': reserved})
 
 
 def crowd_api(request):
@@ -39,7 +42,8 @@ def crowd_api(request):
     count = 0
     for t in Timeslot.objects.all():
         count += (t.get_timeslot_number_people_now())
-    return HttpResponse(str(crowd) + "," + str(settings.MAX_CROWD) + "," + str(open) + "," + str(settings.MAX_CROWD - count))
+    return HttpResponse(
+        str(crowd) + "," + str(settings.MAX_CROWD) + "," + str(open) + "," + str(settings.MAX_CROWD - count))
 
 
 def diff(request, delta):

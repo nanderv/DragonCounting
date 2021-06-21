@@ -6,13 +6,14 @@
     On this web page, we count how crowded the drakenkelder is. You can also reserve for your visit here.
     <hr>
     <div class="row">
-        {% if not user.is_anonymous %}
             <div class="card col-sm-12  col-md-6">
                 <div class="card-body">
                     <h5 class="card-title">Change Status</h5>
                     <h6 class="card-subtitle mb-2 text-muted">How Busy is the DK?</h6>
                     <p class="card-text">
-                        The room has {{ crowd }} people in the room, out of a maximum {{ max }}.
+                        The room has {{ crowd }} people in the room, out of a maximum {{ max }}.{% if reserved_count >0 %} <br>
+                        There are still {{ reserved_count }} people who have reserved for right now.
+                    {% endif %}
                     <form method="post" action="#">
                         {% csrf_token %}
                         <input type="number" id="crowd" name="crowd" value="{{ crowd }}">
@@ -23,7 +24,6 @@
                     <a class="btn btn-primary" href="{% url 'traffic_light.diff' 1 %}#here" class="card-link">+1</a>
                 </div>
             </div>
-        {% endif %}
 
         <div class="card col-sm-12 col-md-6">
             <div class="card-body">
