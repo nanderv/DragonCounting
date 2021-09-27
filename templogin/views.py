@@ -23,4 +23,4 @@ def temp_login(request):
     for c in CrossLogin.objects.filter(perms_level=tt.perm_level):
         print(c)
         login(request, c.user)
-    return redirect('reserve')
+    return redirect('traffic_light.view')
