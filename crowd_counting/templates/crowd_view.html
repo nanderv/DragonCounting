@@ -3,7 +3,7 @@
 
 {% block title %}Reservation Portal{% endblock %}
 {% block content %}
-    On this web page, we count how crowded the drakenkelder is. You can also reserve for your visit here.
+    On this web page, we count how crowded the drakenkelder is.
     <hr>
     <div class="row">
         {% if not user.is_anonymous %}
@@ -37,7 +37,6 @@
                         {% else %}
                             <img style="width:100px;" src="{% static 'images/light/green.png' %}"><br/>
                             The room has {{ crowd }} people in the room, out of a maximum {{ max }}.{% if reserved_count > 0 %} <br>
-                        There are still {{ reserved_count }} people who have reserved for right now.
                     {% endif %}
                         {% endif %}
                         </p>
